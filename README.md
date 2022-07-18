@@ -23,7 +23,7 @@
 </p>
 
 <h1>History</h1>
-The Heritage College Code Testing Platform was developed during 2021-2022 as part of the Development Project Course alongside, Allan McDonald as our End User.
+The Heritage College Code Testing Platform was developed during 2021-2022 as part of the Development Project Course.
 
 Dev Project Team members:
 - [Cameron Radmore](https://github.com/radmorecameron)
@@ -33,10 +33,6 @@ Dev Project Team members:
 - [Santiago Cifuentes](https://github.com/sancifuentes)
 - [Serge Arseneault](https://github.com/serge-xc)
 - [Shuai Yan](https://github.com/jared-yan)
-
-Project Manager:
-- [Richard Chan](https://github.com/rchan613)
-
 
 Languages are supported via an onprem hosted [judge0 api](https://github.com/judge0/judge0) and the following languages will be supported:
 |Language|Data Type|Default Value|Reference Type|
