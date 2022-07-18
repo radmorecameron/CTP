@@ -112,7 +112,7 @@ namespace CodeTestingPlatform.Repositories {
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Course course) {
+        public override async Task DeleteAsync(Course course) {
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
         }

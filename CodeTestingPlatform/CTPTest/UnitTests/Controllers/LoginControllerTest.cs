@@ -15,7 +15,6 @@ using Xunit;
 
 namespace CTPTest.UnitTests.Controllers {
     public class LoginControllerTest {
-        private readonly HtmlEncoder _htmlEncoder = null;
         public readonly TestSetup ts;
         public LoginControllerTest() {
             ts = new();

@@ -123,7 +123,7 @@ namespace CodeTestingPlatform.Repositories {
             await UpdateDate(signature.SignatureId);
         }
 
-        public async Task DeleteAsync(MethodSignature signature) {
+        public override async Task DeleteAsync(MethodSignature signature) {
             _context.SignatureParameters.RemoveRange(_context.SignatureParameters.Where(p => p.MethodSignatureId == signature.SignatureId));
             await _context.SaveChangesAsync();
             _context.MethodSignatures.Remove(signature);

@@ -56,7 +56,7 @@ namespace CodeTestingPlatform.Repositories {
             await _methodSignatureRepository.UpdateDate(testCase.MethodSignatureId);
         }
 
-        public async Task DeleteAsync(TestCase testCase) {
+        public override async Task DeleteAsync(TestCase testCase) {
             _context.TestCases.Remove(testCase);
             await _context.SaveChangesAsync();
         }

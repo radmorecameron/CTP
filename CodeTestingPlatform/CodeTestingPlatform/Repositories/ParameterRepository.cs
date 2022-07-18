@@ -37,7 +37,7 @@ namespace CodeTestingPlatform.Repositories {
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Parameter param) {
+        public override async Task DeleteAsync(Parameter param) {
             _context.Parameters.Remove(param);
             await _context.SaveChangesAsync();
         }
