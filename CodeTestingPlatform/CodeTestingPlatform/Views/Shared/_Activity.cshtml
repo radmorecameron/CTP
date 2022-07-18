@@ -1,0 +1,64 @@
+﻿@model List<Activity>
+
+@if (Model.Count() != 0) {
+    <h4>Activities</h4>
+
+    <table id="activities_table" class="detail">
+        <thead class="bg-yellow">
+            <tr>
+                <th></th>
+                <th class="title_col">Title</th>
+                <th class="activity_type_col">Activity Type</th>
+                <th class="start_date_col">Start Date</th>
+                <th class="end_date_col">End Date</th>
+                <th class="language_col" colspan="6">Language</th>
+                <th>
+                    @if (_cs.IsUserATeacher())
+                    {
+                        <a title="Add Activity" aria-label="Add Activity" class="add_symbol btn btn-default" asp-action="Create" asp-controller="Activity" asp-route-courseId="@ViewData["courseId"]" asp-route-from="@ViewContext.RouteData.Values["controller"]"><i class="fas fa-plus"></i></a>
+                    }
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ViewData["activityCount"] = 0;}
+            @foreach (Activity activity in Model) {
+                bool invalidActivity = ViewBag.InvalidActivities.ContainsKey(activity.ActivityId);
+                string errorMessage = "";
+                if (invalidActivity) {
+                    errorMessage = $"This Activity has {ViewBag.InvalidActivities[activity.ActivityId]} Signature{(ViewBag.InvalidActivities[activity.ActivityId] > 1 ? "s" : "")} with Error(s)";
+                }
+                ViewData["activityCount"] = (int)ViewData["activityCount"] + 1;
+                <tr id="@(ViewData["activityCount"])_activity_row">
+                    <td title="View Method Signatures" aria-label="View Method Signatures" role="button" id="@(ViewData["activityCount"])_activity_btn" class="btn btn-default" onclick="show_hide_row('@(ViewData["activityCount"])_method_row', '@(ViewData["activityCount"])_activity_row', '@(ViewData["activityCount"])_activity_btn', @activity.MethodSignatures.Count);"><i class="fas fa-arrow-circle-right"></i></td>
+                    <td class="title_col">
+                        @if (_cs.IsUserATeacher()) {
+                            <a title="View Activity" aria-label="View Activity" asp-action="Details" asp-controller="Activity" asp-route-id="@activity.ActivityId">@Html.DisplayFor(i => activity.Title)</a>
+                            @(invalidActivity ? Html.Raw($"<span rel=\"tooltip\" title=\"{errorMessage}\" aria-label=\"{errorMessage}\" class=\"badge rounded-pill bg-danger\">{ViewBag.InvalidActivities[activity.ActivityId]}</span>") : "")
+                        } else {
+                            @Html.DisplayFor(i => activity.Title)
+                        }
+                    </td>
+                    <td class="activity_type_col">@Html.DisplayFor(i => activity.ActivityType.ActivityName)</td>
+                    <td class="start_date_col">@Html.DisplayFor(i => activity.StartDate)</td>
+                    <td class="end_date_col">@Html.DisplayFor(i => activity.EndDate)</td>
+                    <td class="language_col">@Html.DisplayFor(i => activity.Language.LanguageFullName)</td>
+                    <td class="actions_col"></td>
+                </tr>
+
+                ViewData[$"activityCount{ViewData["activityCount"]}_activityId"] = activity.ActivityId;
+                @await Html.PartialAsync("_MethodSignature", activity.MethodSignatures.ToList())
+            }
+        </tbody>
+    </table>
+} else {
+<div class="row">
+    <h5>This course does not have any activities.</h5>
+    @if (_cs.IsUserATeacher()) {
+    <div class="col-lg-6 py-2">
+        <a asp-action="Create" asp-controller="Activity" asp-route-courseId="@ViewData["courseId"]" asp-route-from="@ViewContext.RouteData.Values["controller"]"><input class="btn btn-primary" type="button" value="Create An Activity" /></a>
+    </div>
+    }
+</div>
+}
+

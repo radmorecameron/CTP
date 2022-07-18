@@ -1,0 +1,14 @@
+﻿
+
+<form asp-action="UpdateDefaultLanguage" asp-controller="CourseSetting" class="col-auto row justify-content-end">
+    <div class="col-9 form-floating">
+        <select name="defaultLanguageId" class="form-control w-13r" asp-items="@(new SelectList((List<Language>)ViewData["languages"], "LanguageId", "LanguageName", (int)ViewData["defaultLanguageId"]))">
+        <option value="0">@ViewData["defaultValue"]</option>
+        </select>
+        <label for="defaultLanguageId">Course Default Language</label>
+    </div>
+    <input type="hidden" name="courseCode" value="@ViewData["courseCode"]" />
+    <input type="hidden" name="courseId" value="@ViewData["courseId"]" />
+
+    <div class="col-3"><input type="submit" value="Set" class="btn btn-primary" /></div>
+</form>

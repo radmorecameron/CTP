@@ -1,0 +1,52 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.Activity
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete Activity</h1>
+
+@if ((bool)TempData["ShowDeleteWarning"]) {
+    <div class="alert alert-warning mt-3" role="alert">
+        <h4 class="alert-heading">Warning!</h4>
+        <p>If you delete this Activity, its associated Method Signatures, Test Cases and Student Code Submissions will also be deleted.</p>
+        <hr>
+        <p class="mb-0">@TempData["DeleteWarning"]</p>
+    </div>
+}
+
+<h3>Are you sure you want to delete this Activity?</h3>
+
+<h4>@Model.Title</h4>
+
+<hr />
+<div class="container bg-lgrey mb-2">
+    <div class="row">
+        <label class="col-2 py-1 bold  text-right" asp-for="Course"></label>
+        <div class="col py-1 text-left">@Model.Course.CourseName</div>
+    </div>
+    <div class="row">
+        <label class="col-2 py-1 bold text-right" asp-for="ActivityType"></label>
+        <div class="col py-1 text-left">@Model.ActivityType.ActivityName</div>
+    </div>
+    <div class="row">
+        <label class="col-2 py-1 bold text-right" asp-for="Language"></label>
+        <div class="col py-1 text-left">@Model.Language.LanguageFullName</div>
+    </div>
+    <div class="row">
+        <label class="col-2 py-1 bold text-right" asp-for="StartDate"></label>
+        <div class="col py-1 text-left">@Model.GetStrStartDate()</div>
+    </div>
+    <div class="row">
+        <label class="col-2 py-1 bold text-right" asp-for="EndDate"></label>
+        <div class="col py-1 text-left">@Model.GetStrEndDate()</div>
+    </div>
+</div>
+<div>
+
+    <form asp-action="DeleteConfirm" asp-controller="Activity">
+        <input type="hidden" asp-for="ActivityId" />
+        <input type="hidden" asp-for="CourseId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Edit" asp-controller="Activity" asp-route-id="@Model.ActivityId" asp-route-courseId="@Model.CourseId">Cancel</a>
+    </form>
+</div>

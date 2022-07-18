@@ -1,0 +1,27 @@
+USE [CTP]
+GO
+
+/****** Object:  Table [dbo].[Teacher]    Script Date: 2022-03-28 7:31:10 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Teacher](
+	[TeacherId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+ CONSTRAINT [Teacher_PK] PRIMARY KEY CLUSTERED 
+(
+	[TeacherId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Teacher]  WITH CHECK ADD  CONSTRAINT [Teacher_User_FK] FOREIGN KEY([UserId])
+REFERENCES [dbo].[CTPUser] ([UserId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Teacher] CHECK CONSTRAINT [Teacher_User_FK]
+GO

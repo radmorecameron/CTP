@@ -1,0 +1,43 @@
+﻿@model List<Activity>
+
+@if (Model.Count() != 0) {
+    <h4>Activities</h4>
+
+    <table id="activities_table" class="detail">
+        <thead class="bg-yellow">
+            <tr>
+                <th>
+                </th>
+                <th class="title_col">Title</th>
+                <th class="activity_type_col">Activity Type</th>
+                <th class="start_date_col">Start Date</th>
+                <th class="end_date_col">End Date</th>
+                <th class="language_col">Language</th>
+                <th aria-hidden="true" class="actions_col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ViewData["activityCount"] = 0;}
+            @foreach (Activity activity in Model) {
+                ViewData["activityCount"] = (int)ViewData["activityCount"] + 1;
+                <tr id="@(ViewData["activityCount"])_activity_row">
+                    <td class="btn"></td>
+                    <td class="title_col">
+                            <a title="View Activity" aria-label="View Activity" asp-action="CodeSubmission" asp-controller="CodeUpload" asp-route-activityId="@activity.ActivityId">@Html.DisplayFor(i => activity.Title)</a>
+                    </td>
+                    <td class="activity_type_col">@Html.DisplayFor(i => activity.ActivityType.ActivityName)</td>
+                    <td class="start_date_col">@Html.DisplayFor(i => activity.StartDate)</td>
+                    <td class="end_date_col">@Html.DisplayFor(i => activity.EndDate)</td>
+                    <td class="language_col">@Html.DisplayFor(i => activity.Language.LanguageName)</td>
+                    <td class="actions_col">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} else {
+    <div class="row">
+        <h5>This course does not have any activities.</h5>
+    </div>
+}
+

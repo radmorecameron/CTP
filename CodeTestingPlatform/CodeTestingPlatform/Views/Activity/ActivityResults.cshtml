@@ -1,0 +1,73 @@
+﻿@model ActivityResults
+@{ 
+    ViewData["Title"] = "Activity Results";
+}
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/kt-2.6.4/datatables.min.css" />
+}
+<h1>Activity Results</h1>
+<h4><a asp-action="Details" asp-route-id="@Model.Activity.ActivityId">@Model.Activity.Title</a></h4>
+<div class="container bg-lgrey mb-2">
+    <div class="row">
+        <strong class="col-3 py-1 bold  text-end">Total Students:</strong>
+        <div class="col-3 py-1 text-start">@Model.TotalStudents</div>
+    </div>
+    <div class="row">
+        <strong class="col-3 py-1 bold text-end">Students That Uploaded Code:</strong>
+        <div class="col py-1 text-start">@Model.StudentsThatUploaded</div>
+    </div>
+    <div class="row">
+        <strong class="col-3 py-1 bold  text-end">Students That Ran Code:</strong>
+        <div class="col-3 py-1 text-start">@Model.StudentsThatRanCode</div>
+    </div>
+    <div class="row">
+        <strong class="col-3 py-1 bold  text-end">Total TestCases Ran:</strong>
+        <div class="col-3 py-1 text-start">@Model.TestsRan</div>
+    </div>
+    <div class="row">
+        <strong class="col-3 py-1 bold  text-end">Total TestCases Passed:</strong>
+        <div class="col-3 py-1 text-start">@Model.TestsPassed</div>
+    </div>
+</div>
+@*TODO
+    - Show list of tests (sorted by % failed on said test)
+*@
+<table id="activityResultTable">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Upload Date</th>
+            <th>Failing Tests</th>
+            <th>Passing Tests</th>
+            <th>Total Tests</th>
+            <th>% Passing</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var studentResult in Model.StudentResults) {
+            <tr>
+                <td>@studentResult.FirstName</td>
+                <td>@studentResult.LastName</td>
+                <td>@studentResult.UploadDateString</td>
+                <td>@studentResult.FailedTestsString</td>
+                <td>@studentResult.PassedTestsString</td>
+                <td>@studentResult.TotalTestsString</td>
+                <td>@studentResult.PassTotalPercentageString</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/kt-2.6.4/datatables.min.js"
+            crossorigin="anonymous"
+            asp-fallback-src="libraries/DataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#activityResultTable').DataTable({
+                paging: false
+            });
+        });
+    </script>
+}

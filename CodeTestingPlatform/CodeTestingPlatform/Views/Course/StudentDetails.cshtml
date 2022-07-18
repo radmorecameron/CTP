@@ -1,0 +1,19 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.Course
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Course</h1>
+
+<h4>@Html.DisplayFor(model => model.CourseName)</h4>
+
+<hr />
+
+
+@await Html.PartialAsync("_StudentActivity", Model.Activities.ToList())
+
+
+<div>
+    <a class="btn btn-default text-secondary" asp-action="Index" asp-controller="Student">Back to Home</a>
+</div>

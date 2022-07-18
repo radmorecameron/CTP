@@ -1,0 +1,33 @@
+﻿@model Login
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2 class="text-center pt-3">Welcome to the Heritage College Code Testing Platform</h2>
+@if (ViewBag.Message != null) {
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    @ViewBag.Message
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+}
+<div class="row justify-content-center pt-3">
+    <div class="col-4 border border-warning border-3 p-3 rounded-3">
+        <p id="welcome">To log in, enter your Heritage username and password.</p>
+        <form action="" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-3">
+                <label class="form-label" asp-for="Username"></label>:
+                <input class="form-control" type="text" asp-for="Username" placeholder="Username">
+                <span asp-validation-for="Username"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="Password"></label>:
+                <input class="form-control" type="password" asp-for="Password" placeholder="Password">
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input class="btn btn-primary" type="submit" name="submit" value="Login" />  @*<a asp-controller="Home" asp-action="ReleaseNotes">Can't Login?</a>*@
+            </div>
+        </form>
+    </div>
+</div>

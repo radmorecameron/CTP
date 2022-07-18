@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["About"];
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    List<SelectListItem> cultureItems = new List<SelectListItem>() {
+            new SelectListItem {Value="en", Text="English" },
+            new SelectListItem {Value="fr", Text="French" }
+    };
+    string returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    string lang = @requestCulture.RequestCulture.UICulture.Name;
+}
+
+@section Styles {
+    <link type="text/css" rel="stylesheet" href="~/css/shared/about.css"/>
+} 
+
+<form class="form-group" id="selectLanguage" asp-controller="Home"
+      asp-action="SelectLanguage" asp-route-returnUrl="@returnUrl" method="post">
+    <label class="control-label" asp-for="@requestCulture.RequestCulture.UICulture.Name">@Localizer["Language"]:</label>
+    <select name="culture" onchange="this.form.submit();" class="selectpicker" data-width="fit" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems">
+    </select>
+</form>
+
+<div class="aboutDiv">
+    <h1>@Localizer["CTP"]</h1>
+    <div>
+        <h2>@Localizer["SystemDescriptionTitle"]</h2>
+        <p>
+            @Localizer["SystemDescription"]
+        </p>
+    </div>
+    <div>
+        <h2>@Localizer["UserDescriptionTitle"]</h2>
+        <h3>@Localizer["Student"]</h3>
+        <p>
+            @Localizer["StudentDescription"]
+        </p>
+        <h3>@Localizer["Teacher"]</h3>
+        <p>
+            @Localizer["TeacherDescription"]
+        </p>
+    </div>
+    <div>
+        <h2>@Localizer["TeamDescriptionTitle"]</h2>
+        <ul>
+            @Localizer["TeamDescription"]
+        </ul>
+    </div>
+</div>
+
+

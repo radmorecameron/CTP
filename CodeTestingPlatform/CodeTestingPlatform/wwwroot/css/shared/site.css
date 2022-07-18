@@ -1,0 +1,404 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+:root {
+    --warning: #e89d00;
+    --header-main-colour: #e4e0d5;
+}
+
+header {
+    width: 100%;
+    overflow: hidden;
+}
+.helpImg {
+    width: 60%;
+    height: auto;
+    margin: 0 auto;
+}
+.branding {
+    color: white;
+    display: inline;
+    font-size: 2.8em;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+a.navbar-brand {
+    text-align: center;
+    white-space: normal;
+    word-break: break-all;
+}
+
+input.btn.btn-outline-warning {
+    border-color: var(--warning);
+    color: #Bf8100;
+}
+
+.btn-warning {
+    background-color: var(--warning);
+    border-color: var(--warning);
+}
+
+button#btn-add-param {
+    background-color: #0d6efd;
+    color: white;
+}
+
+a:link.btn-warning, a:visited.btn-warning { color: #fff; }
+
+input.btn-outline-warning:hover { color: #000; }
+
+.ui-message { font-size: 1.5em; }
+
+.hide { display: none; }
+
+.btn-link-color {
+    color: white !important;
+}
+/* Search Functionality Styles
+-------------------------------------------------- */
+.search-control {
+    margin: 15px 0;
+}
+
+.search-control button {
+    height: 35px;
+    vertical-align: top;
+}
+
+.search-control input { padding-left: 5px; }
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html {
+    font-size: 14px;
+    max-height: auto;
+    /*min-height: 100%;*/
+    position: relative;
+}
+
+
+
+@media (min-width: 768px) {
+    html { font-size: 16px; }
+
+    h1 {
+        text-align: left;
+        margin-top: 10px;
+    }
+}
+
+.border-top { border-top: 1px solid #e5e5e5; }
+
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+body {
+    /* Margin bottom by footer height */
+    min-height: 100%;
+}
+
+h1 form {
+    display: inline
+}
+
+h1 form button.btn {
+    border-radius: 50%
+}
+
+/* Sticky Footer Styling */
+body{
+    min-height: 100vh;
+}
+.sticky-footer{
+    margin-top: 2rem;
+    position: sticky;
+    top: 100%;
+    text-align: center;
+}
+
+.noResults {
+    font-size: 32px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.students > div, .student-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.student-details {
+    border: solid 1px black;
+    border-radius: 5px;
+    margin: 0.5em;
+    padding-left: 0.4em;
+}
+
+.student-details > p {
+    margin-bottom: 0;
+    max-width: 98%;
+    word-break: break-word;
+}
+
+#students-header {
+    border-bottom: double 1px black;
+    padding-left: 0.4em;
+}
+
+.requires-evaluation {
+    border: solid 2px #17a2b8;
+    color: #171616 !important;
+    margin-bottom: 0 !important;
+}
+
+.card-header .btn-link { color: black; }
+
+.loading {
+    height: 33.33px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    width: 50px;
+}
+
+div.tooltip {
+    background: lightsteelblue;
+    border: 0;
+    border-radius: 8px;
+    font: 12px sans-serif;
+    /*width: 60px;*/
+    /*height: 28px;*/
+    padding: 2px;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+}
+
+.font-weight-bold{ font-weight: bold; }
+
+.form-check-checkbox {
+    width: 2em;
+    margin-left: -2.5em;
+}
+
+.ul-no-style {
+    list-style-type: none;
+    padding: 0 0 10px 0;
+    margin: 0;
+}
+
+.ul-no-style li {
+    padding-top: 10px;
+}
+
+.table-table-row {
+    border-bottom: solid 1px black;
+}
+
+#version-link { color: #463f2d; }
+
+#top-menu > li { white-space: nowrap; }
+
+
+@media all and (hover) {
+    .student-details:not(.requires-evaluation) { border: solid 2px white; }
+
+    #student-header { padding-left: 1em; }
+
+    .student-details { padding-left: 1em; }
+}
+
+.editBtn, .btnDelete:hover, rect { cursor: pointer; }
+
+.validation-summary-errors ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#sidebar {
+    margin-left: 0;
+    min-width: 20vh;
+}
+#helpContent {
+    padding-left: 3rem;
+}
+#selectLanguage {
+    margin: 0;
+    margin-left: auto;
+}
+.helpDiv {
+    overflow-x: hidden;
+    display: flex !important;
+}
+#activities_table, #activityResultTable {
+    text-align: left;
+    border-collapse: collapse;
+    color: #2E2E2E;
+    border: 5px;
+    table-layout: fixed;
+}
+
+    .hidden_row {
+        display: none;
+    }
+
+.title_col {
+    width: 200px;
+}
+
+.activity_type_col {
+    width: 250px;
+}
+
+.start_date_col {
+    width: 250px;
+}
+
+.end_date_col {
+    width: 250px;
+}
+
+.language_col {
+    width: 200px;
+}
+
+.actions_col {
+    width: 250px;
+}
+
+.method_name_col {
+    width: 666px;
+}
+
+.description_col {
+    width: 250px;
+}
+
+.return_type_col {
+    width: 250px;
+}
+
+.data_type_col {
+    width: 200px;
+}
+
+.default_value_col {
+    width: 200px;
+}
+
+.input_output_col {
+    width: 200px;
+}
+
+.required_col {
+    width: 200px;
+}
+
+.bg-yellow {
+    background-color: #e89d00;
+}
+
+.bg-grey {
+    background-color: #e6e6e6;
+}
+
+.bg-grey2 {
+    background-color: #c9c9c9;
+}
+
+.list_border_bottom {
+    border-bottom: 1px solid black;
+}
+
+.selected-activty {
+    border: 1px solid black;
+}
+
+.param_name_col {
+    width: 200px;
+}
+
+.add_symbol {
+    color: black !important;
+    text-decoration: none;
+}
+
+.a-tag-delete {
+    color: white !important;
+    text-decoration: none;
+}
+
+.test_method_table {
+    max-width: 150px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+#activityResultTable {
+    width: 100%;
+}
+#activityResultTable thead {
+    width: 100%;
+}
+tr {
+    min-height: 40px;
+    height: 40px;
+}
+
+.small-screen-branding {
+    color: white;
+    font-size: 2.8em;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    text-align: center;
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .small-screen-branding {
+        display: block;
+    }
+}
+
+.edit-icon {
+    text-decoration: none;
+    display: inline-block;
+    transform: rotateZ(90deg);
+    font-size: 30px;
+    float: right;
+}
+
+.tooltip-inner {
+    max-width: 300px;
+    width: 300px;
+}
+
+.center-display {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+#right-sidebar {
+    margin-right: 0;
+    margin-left: auto;
+    min-width: 20vh;
+}
+
+.heritage-color {
+    color: #bf8100;
+}
+
+.exception-list {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+    list-style: none;
+}

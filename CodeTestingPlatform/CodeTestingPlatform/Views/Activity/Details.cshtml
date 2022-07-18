@@ -1,0 +1,53 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.Activity
+
+@{
+    ViewData["Title"] = "Activity Details";
+    TempData["activityId"] = Model.ActivityId;
+    ViewData["activityId"] = Model.ActivityId;
+    var message = TempData["message"];
+    if (message != null) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<h1>Activity Details</h1>
+<h4>@Model.Title</h4>
+<hr />
+<div class="container bg-lgrey mb-2">
+    <a class="edit-icon float-right" asp-action="Edit" asp-controller="Activity" asp-route-id="@Model.ActivityId" asp-route-from="Details" asp-route-courseId="@Model.CourseId">&#9998;</a>
+    <div class="row">
+        <strong class="col-2 py-1 bold  text-end">@Html.DisplayNameFor(a => a.Course)</strong>
+        <div class="col py-1 text-start">
+            <a asp-action="Details" asp-controller="Course" asp-route-id="@Model.CourseId">
+                @Model.Course.CourseName
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <strong class="col-2 py-1 bold text-end">@Html.DisplayNameFor(a=>a.ActivityType)</strong>
+        <div class="col py-1 text-start">@Model.ActivityType.ActivityName</div>
+    </div>
+    <div class="row">
+        <strong class="col-2 py-1 bold text-end">@Html.DisplayNameFor(a => a.Language)</strong>
+        <div class="col py-1 text-start">@Model.Language.LanguageFullName</div>
+    </div>
+    <div class="row">
+        <strong class="col-2 py-1 bold text-end">@Html.DisplayNameFor(a => a.StartDate)</strong>
+        <div class="col py-1 text-start">@Model.GetStrStartDate()</div>
+    </div>
+    <div class="row">
+        <strong class="col-2 py-1 bold text-end">@Html.DisplayNameFor(a => a.EndDate)</strong>
+        <div class="col py-1 text-start">@Model.GetStrEndDate()</div>
+    </div>
+    <a asp-action="ActivityResults" asp-route-id="@Model.ActivityId" class="btn btn-primary white-txt">View Results</a>
+</div>
+<div>
+    <div class="container">
+        @await Html.PartialAsync("_MethodSignature", Model.MethodSignatures.ToList())
+    </div>
+</div>
+
+

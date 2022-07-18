@@ -1,0 +1,918 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.MethodSignature
+
+@{ ViewData["Title"] = ViewContext.RouteData.Values["action"];
+    List<int> signatureExceptions = ViewBag.SignatureExceptions != null ? (List<int>)ViewBag.SignatureExceptions : new List<int>();
+    List<int> signatureUserDefinedExceptions = ViewBag.SignatureUserDefinedExceptions != null ? (List<int>)ViewBag.SignatureUserDefinedExceptions : new List<int>();
+    var message = TempData["message"];
+    if (message != null) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    if (Model.TestCases.Count() > 0) {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            By editing this method signature, linked test cases will be affected.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    var errorMessage = TempData["errorMessage"];
+    if (errorMessage != null) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h5>Errors:</h5>
+            &nbsp;&nbsp;&nbsp;&nbsp; -@Html.Raw(@errorMessage)
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+
+<h1>@ViewContext.RouteData.Values["action"] Method Signature</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <div class="card flex-fill mb-3">
+            <div class="card-header">
+                <div hidden class="card-actions float-right">
+                    <div class="dropdown show">
+                        <a href="#" data-toggle="dropdown" data-display="static">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">About</a>
+                            <a class="dropdown-item" href="#">Help</a>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="card-title mb-0">@Model.Activity.Title (@Model.Activity.Language.LanguageFullName)</h5>
+            </div>
+            <div id="datatables-dashboard-projects_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6"></div><div class="col-sm-12 col-md-6"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm()) {
+            <input type="hidden" for="from" value="@ViewData["from"]" />
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+            <div hidden class="form-group">
+                <input asp-for="ActivityId" class="form-control" />
+                <input asp-for="SignatureId" class="form-control" />
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input asp-for="MethodName" class="form-control" oninput="preview()" placeholder="@(Model.MethodName == null ? "Method Name" : Model.MethodName)" />
+                        <label asp-for="MethodName"></label>
+                        @*<span asp-validation-for="MethodName" class="text-danger"></span>*@
+                    </div>
+                </div>
+
+                <div class="col-md">
+                    <div class="form-floating">
+                        <select name="ReturnTypeId" class="form-select" asp-items="ViewBag.DataTypes" id="ReturnTypeId" onchange="preview()"></select>
+                        <label asp-for="ReturnTypeId"></label>
+                        @*<span asp-validation-for="ReturnTypeId" class="text-danger"></span>*@
+                    </div>
+                    <div class="form-floating mb-3" id="returnTypeDiv">
+                        <input type="text" asp-for="ReturnObjectType" onkeyup="preview()" class="my-1 w-100 form-control" id="returnObjectType"/>
+                        <label class="text-nowrap" asp-for="ReturnObjectType"></label>
+                    </div>
+                    
+                </div>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <textarea class="form-control h-100" placeholder="" asp-for="Description"></textarea>
+                    <label asp-for="Description">Description</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @*Tab Navs*@
+                    <ul class="nav nav-tabs mt-2" id="signature-tab" role="tablist">
+                        <li class="nav-item" role="button">
+                            <a class="heritage-color nav-link active"
+                               id="parameters-tab"
+                               data-bs-toggle="tab"
+                               data-bs-target="#parameters"
+                               role="tab"
+                               aria-controls="parameters"
+                               aria-selected="true">Parameters</a>
+                        </li>
+                        <li class="nav-item" role="button">
+                            <a class="heritage-color nav-link"
+                               id="exceptions-tab"
+                               data-bs-toggle="tab"
+                               data-bs-target="#exceptions"
+                               role="tab"
+                               aria-controls="exceptions"
+                               aria-selected="false">Exceptions</a>
+                        </li>
+                        <li class="nav-item" role="button">
+                            <a class="heritage-color nav-link"
+                               id="userDefinedExceptions-tab"
+                               data-bs-toggle="tab"
+                               data-bs-target="#userDefinedExceptions"
+                               role="tab"
+                               aria-controls="userDefinedExceptions"
+                               aria-selected="false">
+                                User-Defined Exceptions</a>
+                        </li>
+                    </ul>
+                    @*Tab Navs*@
+                    @*Tab Content*@
+                    @*Parameters*@
+                    <div class="tab-content" id="signature-tabContent">
+                        <div class="tab-pane fade show active" id="parameters" role="tabpanel" aria-labelledby="parameters-tab">
+                            <h3 class="mt-1">Parameters</h3>
+                            <div class="row font-weight-bold">
+                                <div class="col-4 row">
+
+                                    <div class="col-1"></div>
+                                    <div class="col-10">Name</div>
+
+                                </div>
+                                <div class="col-3">Data Type</div>
+                                <div class="col-3">Default Value</div>
+                                <div class="col-2 mb-2">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            Input
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn" id="btn-add-param" onclick="addParameter();preview()">+</button>
+                                        </div>
+                                        <div class="col-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul id="parameterList" class="ui-sortable">
+                            </ul>
+                        </div>
+                        @*Parameters*@
+                        @*Exceptions*@
+                        <div class="tab-pane fade" id="exceptions" role="tabpanel" aria-labelledby="exceptions-tab">
+                            <h3 class="mt-1">Exceptions</h3>
+                            @for (int i = 0; i < ViewBag.Exceptions.Count; i += 2) {
+                                CodeTestingPlatform.DatabaseEntities.Local.Exception exception1 = ViewBag.Exceptions[i];
+                                CodeTestingPlatform.DatabaseEntities.Local.Exception exception2 = i + 1 < ViewBag.Exceptions.Count ? ViewBag.Exceptions[i + 1] : null;
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @if (signatureExceptions.Contains(exception1.ExceptionId)) {
+                                            <input class="form-check-input checkbox-class exception-checkbox" checked type="checkbox" id="exception@(i)" />
+                                        } else {
+                                            <input class="form-check-input checkbox-class exception-checkbox" type="checkbox" id="exception@(i)" />
+                                        }
+                                        <input type="hidden" id="exception@(i)Id" value="@exception1.ExceptionId" />
+                                        <label class="form-check-label" for="exception@(i)">@exception1.ExceptionName</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @if (exception2 != null) {
+                                            @if (signatureExceptions.Contains(exception2.ExceptionId)) {
+                                                <input class="form-check-input checkbox-class exception-checkbox" checked type="checkbox" id="exception@(i+1)" />
+                                            } else {
+                                                <input class="form-check-input checkbox-class exception-checkbox" type="checkbox" id="exception@(i+1)" />
+                                            }
+                                            <input type="hidden" id="exception@(i+1)Id" value="@exception2.ExceptionId" />
+                                            <label class="form-check-label" for="exception@(i+1)">@exception2.ExceptionName</label>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @*Exceptions*@
+                        <div class="tab-pane fade" id="userDefinedExceptions" role="tabpanel" aria-labelledby="userDefinedExceptions-tab">
+                            <div class="row">
+                                <h3 class="mt-1 col-10">User-Defined Exceptions</h3>
+                                <div class="col-2">
+                                    <button id="udExceptionBtn" class="btn btn-primary" data-bs-toggle="collapse" type="button" data-bs-target="#addNewUDException">+</button>
+                                </div>
+                            </div>
+                            <div class="collapse" id="addNewUDException">
+                                <div class="row">
+                                    <div class="col-md-10 form-group mt-2">
+                                        <label class="form-label">Exception Name</label>
+                                        <input id="udExceptionSignatureId" type="hidden" value="@Model.SignatureId" />
+                                        <input id="udExceptionLanguageId" type="hidden" value="@Model.Activity.LanguageId" />
+                                        <input id="udExceptionName" class="form-control" type="text" name="userDefinedExceptionName" />
+                                    </div>
+                                    <div class="col-md-2 mt-2 row align-content-end">
+                                        <input id="addNewUDExceptionBtn" class="btn btn-primary" type="button" value="Add" />
+                                    </div>
+                                    <span id="udExceptionError" class="text-danger col-12"></span>
+                                </div>
+                            </div>
+                            @if (ViewBag.UserDefinedExceptions != null && ViewBag.UserDefinedExceptions.Count > 0) {
+                                var userDefinedExceptions = ViewBag.UserDefinedExceptions;
+
+                                <div id="userDefinedExceptionsList" class="mt-2 row">
+                                    @foreach (var userDefinedException in userDefinedExceptions) {
+                                        string userDefinedName = userDefinedException.UserDefinedExceptionName;
+                                        int userDefinedId = userDefinedException.UserDefinedExceptionId;
+                                        if (signatureUserDefinedExceptions.Contains(userDefinedId)) {
+                                        <div class="col-md-6">
+                                            <input class="form-check-input checkbox-class user-defined-exception-checkbox" checked type="checkbox" id="udException@(userDefinedId)" />
+                                            <input type="hidden" id="udException@(userDefinedId)Id" value="@(userDefinedId)" />
+                                            <label class="form-check-label">@(userDefinedName)</label>
+                                        </div>
+                                            } else {
+                                        <div class="col-md-6">
+                                            <input class="form-check-input checkbox-class user-defined-exception-checkbox" type="checkbox" id="udException@(userDefinedId)" />
+                                            <input type="hidden" id="udException@(userDefinedId)Id" value="@(userDefinedId)" />
+                                            <label class="form-check-label">@(userDefinedName)</label>
+                                        </div>
+                                        }
+                                    }
+                                </div>
+                            } else {
+                                <div id="userDefinedExceptionsList" class="mt-2 row">
+                                </div>
+                                <p id="noUDExceptionMessage" class="mt-2">No User-Defined Exceptions</p>
+                            }
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input id="exceptionIds" name="exceptionIdsString" type="hidden" value="" />
+                <input id="userDefinedExceptionIds" name="userDefinedExceptionIdsString" type="hidden" value="" />
+                <input type="submit" value="@(ViewContext.RouteData.Values["action"].ToString().ToLower() == "edit" ? "Save" : ViewContext.RouteData.Values["action"])" class="btn btn-primary" id="createBtn" />
+
+                @if (ViewContext.RouteData.Values["action"].ToString().ToLower() == "edit") {
+                    <a asp-action="Delete" asp-controller="MethodSignature" asp-route-id="@Model.SignatureId" class="btn btn-danger a-tag-delete">Delete</a>
+                }
+            </div>
+        }
+        <ul id="paramter_template" hidden>
+            <li class="row ui-state-default border border-light bg-light pt-2 mb-2 h-3-6r">
+                <div class="col-4 mb-2 row">
+
+                    <div class="col-1 move pt-2">↕</div>
+                    <div class="col-10">
+                        <input type="text" class="form-control" name="ParameterName" value="" oninput="preview();" />
+
+                    </div>
+                </div>
+                <div class="col-3  mb-2 ">
+                    <select class="form-select" name="Parameters[0].DataTypeId"  onchange="preview()">
+                        @foreach (SelectListItem item in ViewBag.DataTypes) {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <input type="text" name="Parameters[0].ObjectDataType" onkeyup="preview()" class="my-1 w-100 invisible" placeholder="Data type"/>
+                </div>
+                <div class="col-3 form-group mb-2">
+                    <input type="text" class="form-control" name="DefaultValue" value="" oninput="preview();" />
+                </div>
+                <div class="col-2 text-center mb-2">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-check form-switch pt-2 ps-5">
+                                <input type="hidden" name="InputPrameter" />
+                                <input class="form-check-checkbox" type="checkbox" value="true" onchange="checkbox_changed()" />
+                                <label class="form-check-label" for="inputCheckLabel"></label>
+                            </div>
+                        </div>
+                        <div class="col-3 move"><button type="button" class="btn" onclick="removeParamItem()">x</button></div>
+                        <div class="col-1"></div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <div class="card flex-fill mb-3">
+            <div class="card-header">
+                <div hidden class="card-actions float-right">
+                    <div class="dropdown show">
+                        <a href="#" data-toggle="dropdown" data-display="static">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">Mirror Code</a>
+                            <a class="dropdown-item" href="#">Help</a>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="card-title mb-0">Preview</h5>
+            </div>
+            <div id="datatables-dashboard-projects_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6"></div><div class="col-sm-12 col-md-6"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <textarea id="code"></textarea>
+    </div>
+</div>
+
+<div>
+    @if (ViewData["from"] != null) {
+        @if (ViewData["from"].ToString() == "Course") {
+            <a asp-action="Details" asp-controller="Course" asp-route-id="@Model.Activity.CourseId">Back to Course</a>
+        } else if (ViewData["from"].ToString() == "Activity") {
+            <a asp-action="Details" asp-controller="Activity" asp-route-id="@Model.ActivityId">Back to Activity</a>
+        } else {
+            <a asp-action="Details" asp-controller="MethodSignature" asp-route-id="@Model.SignatureId">Back to Method Signature</a>
+        }
+    } else {
+        <a asp-action="Details" asp-controller="MethodSignature" asp-route-id="@Model.SignatureId">Back to Method Signature</a>
+    }
+</div>
+
+<div class="modal" tabindex="-1" id="userDefinedExceptionModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-yellow">
+                <h5 class="modal-title text-white">Add User-Defined Exception</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center">
+                    <span class="spinner-border" role="status" aria-hidden="true"></span>
+                    <strong class="ms-2">Please wait while tests are running...</strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="~/codemirror/theme/3024-day.css">
+    <link rel="stylesheet" href="~/codemirror/theme/3024-night.css">
+    <link rel="stylesheet" href="~/codemirror/theme/abbott.css">
+    <link rel="stylesheet" href="~/codemirror/theme/abcdef.css">
+    <link rel="stylesheet" href="~/codemirror/theme/ambiance.css">
+    <link rel="stylesheet" href="~/codemirror/theme/ayu-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/ayu-mirage.css">
+    <link rel="stylesheet" href="~/codemirror/theme/base16-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/bespin.css">
+    <link rel="stylesheet" href="~/codemirror/theme/base16-light.css">
+    <link rel="stylesheet" href="~/codemirror/theme/blackboard.css">
+    <link rel="stylesheet" href="~/codemirror/theme/cobalt.css">
+    <link rel="stylesheet" href="~/codemirror/theme/colorforth.css">
+    <link rel="stylesheet" href="~/codemirror/theme/dracula.css">
+    <link rel="stylesheet" href="~/codemirror/theme/duotone-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/duotone-light.css">
+    <link rel="stylesheet" href="~/codemirror/theme/eclipse.css">
+    <link rel="stylesheet" href="~/codemirror/theme/elegant.css">
+    <link rel="stylesheet" href="~/codemirror/theme/erlang-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/gruvbox-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/hopscotch.css">
+    <link rel="stylesheet" href="~/codemirror/theme/icecoder.css">
+    <link rel="stylesheet" href="~/codemirror/theme/isotope.css">
+    <link rel="stylesheet" href="~/codemirror/theme/juejin.css">
+    <link rel="stylesheet" href="~/codemirror/theme/lesser-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/liquibyte.css">
+    <link rel="stylesheet" href="~/codemirror/theme/lucario.css">
+    <link rel="stylesheet" href="~/codemirror/theme/material.css">
+    <link rel="stylesheet" href="~/codemirror/theme/material-darker.css">
+    <link rel="stylesheet" href="~/codemirror/theme/material-palenight.css">
+    <link rel="stylesheet" href="~/codemirror/theme/material-ocean.css">
+    <link rel="stylesheet" href="~/codemirror/theme/mbo.css">
+    <link rel="stylesheet" href="~/codemirror/theme/mdn-like.css">
+    <link rel="stylesheet" href="~/codemirror/theme/midnight.css">
+    <link rel="stylesheet" href="~/codemirror/theme/monokai.css">
+    <link rel="stylesheet" href="~/codemirror/theme/moxer.css">
+    <link rel="stylesheet" href="~/codemirror/theme/neat.css">
+    <link rel="stylesheet" href="~/codemirror/theme/neo.css">
+    <link rel="stylesheet" href="~/codemirror/theme/night.css">
+    <link rel="stylesheet" href="~/codemirror/theme/nord.css">
+    <link rel="stylesheet" href="~/codemirror/theme/oceanic-next.css">
+    <link rel="stylesheet" href="~/codemirror/theme/panda-syntax.css">
+    <link rel="stylesheet" href="~/codemirror/theme/paraiso-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/paraiso-light.css">
+    <link rel="stylesheet" href="~/codemirror/theme/pastel-on-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/railscasts.css">
+    <link rel="stylesheet" href="~/codemirror/theme/rubyblue.css">
+    <link rel="stylesheet" href="~/codemirror/theme/seti.css">
+    <link rel="stylesheet" href="~/codemirror/theme/shadowfox.css">
+    <link rel="stylesheet" href="~/codemirror/theme/solarized.css">
+    <link rel="stylesheet" href="~/codemirror/theme/the-matrix.css">
+    <link rel="stylesheet" href="~/codemirror/theme/tomorrow-night-bright.css">
+    <link rel="stylesheet" href="~/codemirror/theme/tomorrow-night-eighties.css">
+    <link rel="stylesheet" href="~/codemirror/theme/ttcn.css">
+    <link rel="stylesheet" href="~/codemirror/theme/twilight.css">
+    <link rel="stylesheet" href="~/codemirror/theme/vibrant-ink.css">
+    <link rel="stylesheet" href="~/codemirror/theme/xq-dark.css">
+    <link rel="stylesheet" href="~/codemirror/theme/xq-light.css">
+    <link rel="stylesheet" href="~/codemirror/theme/yeti.css">
+    <link rel="stylesheet" href="~/codemirror/theme/idea.css">
+    <link rel="stylesheet" href="~/codemirror/theme/darcula.css">
+    <link rel="stylesheet" href="~/codemirror/theme/yonce.css">
+    <link rel="stylesheet" href="~/codemirror/theme/zenburn.css">
+    <style>
+        .CodeMirror {
+            height: auto;
+            border: 1px solid #ddd;
+        }
+
+        .CodeMirror-scroll {
+            /*max-height: 200px;*/
+        }
+
+        .CodeMirror pre {
+            padding-left: 7px;
+            line-height: 1.25;
+        }
+
+        .banner {
+            background: #ffc;
+            padding: 6px;
+            border-bottom: 2px solid silver;
+            text-align: center
+        }
+
+        .move {
+            cursor: move;
+        }
+
+        /*-- sortable --*/
+
+        #parameterList {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            /*#parameterList li {
+                height: auto;
+            }*/
+
+        .ui-state-highlight {
+            height: 2em;
+            line-height: 1.2em;
+            background-color: gainsboro;
+        }
+
+        /*.h-3-6r {
+            height: 3.6rem !important;
+        }
+
+        .h-6r {
+            height: 6rem !important;
+        }*/
+    </style>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css" />
+
+}
+
+@section Scripts
+{
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @* Code Mirror  *@
+    <script src="~/codemirror/codemirror.js"></script>
+    <link rel="stylesheet" href="~/codemirror/codemirror.css">
+    <script src="~/codemirror/mode/javascript/javascript.js"></script>
+    <script src="~/codemirror/mode/python/python.js"></script>
+    <script src="~/codemirror/mode/clike/clike.js"></script>
+    <script src="~/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="~/codemirror/addon/fold/foldcode.js"></script>
+    <script src="~/codemirror/addon/fold/foldgutter.js"></script>
+    <script src="~/codemirror/addon/fold/brace-fold.js"></script>
+    <script src="~/codemirror/addon/fold/xml-fold.js"></script>
+    <script src="~/codemirror/addon/fold/indent-fold.js"></script>
+    <script src="~/codemirror/addon/fold/markdown-fold.js"></script>
+    <script src="~/codemirror/addon/fold/comment-fold.js"></script>
+    <script src="~/codemirror/addon/selection/active-line.js"></script>
+
+    <script type="text/javascript">
+        // Add the selected test cases to the Post
+        $("#createBtn").on('click', function () {
+            var exceptionIds = $('.exception-checkbox:checkbox:checked').map(function () {
+                return $("#" + this.id + "Id").val();
+            }).get();
+            $("#exceptionIds").val(exceptionIds);
+
+            var userDefinedExceptionIds = $('.user-defined-exception-checkbox:checkbox:checked').map(function () {
+                return $("#" + this.id + "Id").val();
+            }).get();
+            $("#userDefinedExceptionIds").val(userDefinedExceptionIds);
+        });
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true,
+            mode: "text/x-csharp"
+        });
+        editor.setSize('100%', 350);
+        editor.setOption("theme", "default");
+
+        // Variable declaration for setting the object data type when 'other' selected from data type select lists (dropdownboxs)
+        const OTHER_ID = @((int)Data.Types.Other);
+        let returnObjTypeDiv = document.getElementById('returnTypeDiv');
+        //-----------------------------------------------------------------------------------------------------------------------
+
+        /* ----- Signature Manage------*/
+
+        var lang = '@Model.Activity.Language.LanguageName.ToLower().Replace("#", "sharp")';
+        var methodNameText = document.getElementById('MethodName');
+        var returnTypeSelect = document.getElementById('ReturnTypeId');
+        var parameterList = document.getElementById('parameterList');
+
+
+
+        function addParameter(paramName = '', dataType = null, objectType = '', defaultValue = '', isInput = true) {
+            var paramNode = document.getElementById('paramter_template').firstElementChild.cloneNode(true);
+            var parameterList = document.getElementById('parameterList');
+            var index = parameterList.childElementCount;
+            parameterList.appendChild(paramNode);
+
+
+            var dataTypeSelect = paramNode.getElementsByTagName("select")[0];
+
+            var inputElements = paramNode.getElementsByTagName("input");
+            //var requireHidden = inputElements[0];
+            var parameterNameText = inputElements[0];
+            var objectTypeText = inputElements[1]
+            var defaultValueText = inputElements[2];
+            var inputParameterHidden = inputElements[3];
+            var inputParameterCheck = inputElements[4];
+            var inputParameterCheckLabel = paramNode.getElementsByTagName("label")[0];
+
+            inputParameterCheck.id = 'inputParameterCheck' + index;
+            inputParameterCheckLabel.htmlFor = inputParameterCheck.id;
+
+            inputParameterCheck.disabled = !(lang == 'csharp' || lang == 'php');
+            if (dataType && dataType != -1)
+                dataTypeSelect.value = dataType;
+            else
+                dataTypeSelect.value = dataTypeSelect.options[0].value;
+
+            //requireCheck.checked = required;
+            //requireHidden.value = required;
+            //requireCheck.disabled = (lang == 'java');
+            parameterNameText.value = paramName;
+            objectTypeText.value = objectType;
+            defaultValueText.value = defaultValue;
+            //defaultValueText.disabled = required;
+
+            inputParameterHidden.value = isInput;
+            inputParameterCheck.checked = isInput;
+
+            var parameterItem = `Parameters[${index}].`;
+            parameterNameText.name = parameterItem + 'ParameterName';
+            dataTypeSelect.name = parameterItem + 'DataTypeId';
+            objectTypeText.name = parameterItem + 'ObjectDataType';
+           // requireHidden.name = parameterItem + 'RequiredParameter';
+            defaultValueText.name = parameterItem + 'DefaultValue';
+            inputParameterHidden.name = parameterItem + 'InputParameter';
+
+            //requireCheck.addEventListener('change', function () {
+            //    defaultValueText.disabled = event.target.checked;
+            //})
+
+            var checkboxes = paramNode.querySelectorAll("input[type='checkbox']");
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    event.target.value = event.target.checked;
+                    preview();
+                })
+            });
+
+            setLiElements(dataTypeSelect, objectTypeText, paramNode);
+            initializeObjTypeListener(dataTypeSelect, objectTypeText, paramNode);
+        }
+
+        function resetParamItemOrder() {
+            var num = parameterList.children.length;
+
+            for (index = 0; index < num; index++) {
+                var paramNode = parameterList.children[index];
+
+                var dataTypeSelect = paramNode.getElementsByTagName("select")[0];
+
+                var inputElements = paramNode.getElementsByTagName("input");
+                //var requireHidden = inputElements[0];
+                //var requireCheck = inputElements[1];
+                var parameterNameText = inputElements[0]
+                var objectTypeText = inputElements[1];
+                var defaultValueText = inputElements[2];
+                var inputParameterHidden = inputElements[3];
+                //var inputParameterCheck = inputElements[4];
+
+                var parameterItem = `Parameters[${index}].`;
+                parameterNameText.name = parameterItem + 'ParameterName';
+                dataTypeSelect.name = parameterItem + 'DataTypeId';
+                objectTypeText.name = parameterItem + 'ObjectDataType';
+                // requireHidden.name = parameterItem + 'RequiredParameter';
+                defaultValueText.name = parameterItem + 'DefaultValue';
+                inputParameterHidden.name = parameterItem + 'InputParameter';
+            }
+
+            preview();
+        }
+
+        function removeParamItem() {
+            event.target.parentNode.parentNode.parentNode.parentNode.remove();
+            resetParamItemOrder();
+        }
+
+        $(function () {
+            $("#parameterList").sortable({
+                revert: true,
+                placeholder: "sortable-placeholder",
+                stop: function (event, ui) {
+                    resetParamItemOrder();
+                }
+            });
+        });
+
+        function template(strings, ...keys) {
+            return (function (...values) {
+                let dict = values[values.length - 1] || {};
+                let result = [strings[0]];
+                keys.forEach(function (key, i) {
+                    let value = Number.isInteger(key) ? values[key] : dict[key];
+                    result.push(value, strings[i + 1]);
+                });
+                return result.join('');
+            });
+        }
+
+        var paramterTemplates = {
+            'csharp': template`${'outMark'}${'dataType'} ${'paramName'}${'paramValue'}`,
+            'java': template`${'outMark'}${'dataType'} ${'paramName'}${'paramValue'}`,
+            'python': template`${'paramName'}${'paramValue'} :${'dataType'}`,
+            'javascript': template`${'paramName'}${'paramValue'}`,
+            'php': template`${'dataType'} ${'outMark'}$${'paramName'}${'paramValue'}`
+        };
+
+        var functionTemplates = {
+            'csharp': template`public class HelloWorld
+{
+    public ${'ReturnType'} ${'MethodName'}(${'Parameters'}) {
+    }
+}`,
+            'java': template`public class HelloWorld
+{
+    public ${'ReturnType'} ${'MethodName'}(${'Parameters'}) {
+    }
+}`,
+            'python': template`def ${'MethodName'}(${'Parameters'}) -> ${'ReturnType'}:
+    `,
+
+            'javascript': template`function ${'MethodName'}(${'Parameters'}){
+    ';
+}`,
+
+            'php': template`<?php
+    declare(strict_types = 1);
+    function ${'MethodName'}(${'Parameters'}) : ${'ReturnType'} {
+    }
+?>`
+        };
+
+        function checkbox_changed() {
+            var hiddenInput = event.target.parentNode.querySelectorAll("input[type='hidden']")[0];
+            hiddenInput.value = event.target.checked;
+            preview();
+        }
+
+        function preview() {
+            let returnObjType = document.getElementById('returnObjectType');
+            console.log(returnTypeSelect.selectedIndex)
+            console.log(OTHER_ID)
+            var returnType = (returnTypeSelect.value != OTHER_ID) ? returnTypeSelect.options[returnTypeSelect.selectedIndex].text : returnObjType.value;
+
+            var methodName = methodNameText.value;
+
+            var num = parameterList.children.length;
+
+            var params = [];
+
+            var paramterTemplate = paramterTemplates[lang];
+
+            for (index = 0; index < num; index++) {
+                var paramNode = parameterList.children[index];
+
+                var dataTypeSelect = paramNode.getElementsByTagName("select")[0];
+                var inputElements = paramNode.getElementsByTagName("input");
+
+                var nameInput = inputElements[0];
+                var objectDataType = inputElements[1];
+                //var requireHidden = inputElements[0];
+                //var requireCheck = inputElements[1];
+                var defaultValueText = inputElements[2];
+                var inputParameterHidden = inputElements[3];
+                var inputParameterCheck = inputElements[4];
+
+                var dataType = (dataTypeSelect.value != OTHER_ID) ? dataTypeSelect.options[dataTypeSelect.selectedIndex].text : objectDataType.value;
+                //var required = requireCheck.checked;
+                var defaultValue = defaultValueText.value;
+                //defaultValueText.disabled = requireCheck.disabled;
+                var inputParam = inputParameterCheck.checked;
+
+                var quoteMark = '';
+                if (dataType.indexOf("[]") == -1) {
+                    if (dataType.toLowerCase().indexOf('str') == 0) quoteMark = '"';
+                    else if (dataType.indexOf('char') == 0) quoteMark = "'";
+                }
+
+                var paramValue = '';
+                if (defaultValue) paramValue = ` = ${quoteMark}${defaultValue}${quoteMark}`;
+
+
+                var outMark = '';
+                if (!inputParam) {
+                    if (lang == 'csharp') outMark = 'out ';
+                    else if (lang == 'php') outMark = '&';
+                }
+
+                var paramFormatter = paramterTemplate({ 'outMark': outMark, 'dataType': dataType, 'paramName': nameInput.value, 'paramValue': paramValue });
+                params.push(paramFormatter);
+
+            }
+
+            var parameters = params.join(', ');
+
+            var codeTemplate = functionTemplates[lang];
+
+            editor.getDoc().setValue(codeTemplate({ 'MethodName': methodName, 'ReturnType': returnType, 'Parameters': parameters }));
+        }
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+            returnObjTypeDiv.style.display = (returnTypeSelect.value == OTHER_ID) ? 'Initial' : 'none';
+
+            @{
+                if (Model != null) {
+                    foreach (var param in Model.SignatureParameters) {
+                        String s = String.Format("addParameter(paramName = '{0}', dataType = {1}, objectType = '{2}', defaultValue = '{3}', isInput = {4});",
+                         param.ParameterName,
+                         param.DataTypeId,
+                         param.ObjectDataType,
+                         param.DefaultValue,
+                         param.InputParameter.ToString().ToLower());
+                         @Html.Raw(s);
+                        }
+                    }
+                }
+
+            preview();
+
+            $(".alert-success").fadeTo(2000, 500).slideUp(500, function () {
+                $(".alert-success").slideUp(500);
+            });
+
+        });
+
+        function showError(flag) {
+            if (flag)
+                $('#udExceptionError').text('Exception name is required.');
+            else
+                $('#udExceptionError').text('');
+        }
+
+        function isEmptyName(name) {
+            if (name.length < 1)
+                return true;
+            return false;
+        }
+
+        function hasSpaces(name) {
+            if (name.indexOf(' ') >= 0)
+                return true
+            return false
+        }
+
+        function hasErrors(name) {
+            if (isEmptyName(name)) {
+                $('#udExceptionError').text('Exception name is required.');
+                return true;
+            }
+
+            if (hasSpaces(name)) {
+                $('#udExceptionError').text('Exception name should not contain spaces.');
+                return true;
+            }
+
+            $('#udExceptionError').text('');
+            return false;
+        }
+
+        function display_error(error) {
+            $('#udExceptionError').text(error);
+        }
+
+        $('#addNewUDExceptionBtn').on('click', function (e) {
+            let userDefinedName = $('#udExceptionName').val();
+            let errors = hasErrors(userDefinedName);
+
+            if (!errors) {
+                addExceptionName(userDefinedName);
+                $(this).prop('disabled', true);
+                console.log('Add new exception');
+                console.log('Ajax call...');
+            }
+        });
+
+        function enableControls() {
+            $('#addNewUDExceptionBtn').prop('disabled', false);
+        }
+
+        function addExceptionsToList(exceptions) {
+            let exceptionList = $('#userDefinedExceptionsList');
+            let id = exceptions['userDefinedExceptionId'];
+            let name = exceptions['userDefinedExceptionName'];
+            let div = `<div class="col-md-6">
+                    <input class="form-check-input checkbox-class user-defined-exception-checkbox" type="checkbox" id="udException${id}" />
+                    <label class="form-check-label">${name}</label>
+                    </div>`
+            exceptionList.append(div);
+        }
+
+        function addExceptionName(name) {
+            let token = $('input[name="__RequestVerificationToken"]').val();
+            let languageId = $('#udExceptionLanguageId').val();
+            let signatureId = $('#udExceptionSignatureId').val();
+            $.ajax({
+                url: '@Url.Action("AddUserDefinedException")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: token,
+                    userDefinedExceptionName: name,
+                    languageId: languageId,
+                    signatureId: signatureId
+                },
+                success: function (data) {
+                    console.log(data);
+                    enableControls();
+                    if (data.error != null && data.error.length > 0) {
+                        display_error(data.error);
+                    } else {
+                        addExceptionsToList(data.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    enableControls();
+                }
+            });
+        }
+
+        //Selecting other(DataType) in return type dropbox
+        returnTypeSelect.addEventListener('change', () => {
+            //display return object type text field if other is selected
+            if (returnTypeSelect.value == OTHER_ID) {
+                returnObjTypeDiv.style.display = 'Initial';
+            } else {
+                returnObjTypeDiv.style.display = 'none';
+            }
+        });
+
+        //Selecting other(DataType) for a signature parameter        
+        function initializeObjTypeListener(dataTypeSelect, objectTypeText, liElement) {
+ 
+            dataTypeSelect.addEventListener('change', () => {
+                if (dataTypeSelect.value == OTHER_ID) {
+                    objectTypeText.classList.remove('invisible');
+                    liElement.classList.add('h-6r');
+                } else {
+                    objectTypeText.classList.add('invisible');
+                    liElement.classList.remove('h-6r');
+                }
+            });
+        }
+        
+        function setLiElements(dataTypeSelect, objectTypeText, liElement) {
+            if (dataTypeSelect.value == OTHER_ID) {
+                objectTypeText.classList.remove('invisible');
+                liElement.classList.add('h-6r');
+            } else {
+                objectTypeText.classList.add('invisible');
+                liElement.classList.remove('h-6r');
+                objectTypeText.value = '';
+            }
+        }
+
+        $('#udExceptionBtn').on('click', function () {
+            let content = $(this).text();
+            if (content == '+')
+                $(this).text('-');
+            else
+                $(this).text('+');
+        });
+    </script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+}

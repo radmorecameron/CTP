@@ -1,0 +1,23 @@
+﻿@model ErrorViewModel
+@{
+    ViewBag.Title = "(500) An Error Occurred";
+}
+
+<div id="notfound">
+    <div class="notfound">
+        <div class="notfound-404">
+            <h1>Oops!</h1>
+        </div>
+        <h2>500 - Internal Server Error</h2>
+        @if (Model.ShowRequestId) {
+            <p>
+                <strong>Request ID:</strong> <code>@Model.RequestId</code>
+            </p>
+        }
+        <p>The server encountered an internal error or misconfiguration and was unable to complete your request.</p>
+        <a href="javascript:location.reload();">Reload page</a>
+    </div>
+</div>
+@section Styles{
+    <link rel="stylesheet" href="~/css/shared/error.css">
+}

@@ -1,0 +1,32 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.ParameterDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<h1>Edit a Parameter</h1>
+
+<h4>Parameter</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TestCaseId" />
+            <input type="hidden" asp-for="ParameterId" />
+            <input type="hidden" asp-for="SignatureParameterId" />
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-controller="TestCase" asp-route-id="@Model.TestCaseId">Back to Test Case</a>
+    </div>
+</div>

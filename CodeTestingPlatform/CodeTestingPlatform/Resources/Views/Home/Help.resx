@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CodeSubmission" xml:space="preserve">
+    <value>CodeSubmission Page</value>
+  </data>
+  <data name="CodeSubmissionMessage" xml:space="preserve">
+    <value>After you select an activity, you will be taken to the Code Submission page. In here, you can upload your file, view all methods for an activity, select and run tests, and see the results.</value>
+  </data>
+  <data name="CodeUpload" xml:space="preserve">
+    <value>Upload a Source File</value>
+  </data>
+  <data name="CodeUploadMessage" xml:space="preserve">
+    <value>You can upload a file. Click on Browse to select a file. Once you choose a file, click on the Upload File button.</value>
+  </data>
+  <data name="CreateActivities" xml:space="preserve">
+    <value>Creating Activities</value>
+  </data>
+  <data name="CreateActivitiesMessage" xml:space="preserve">
+    <value>Through the 'create' activity menu, you have a choice of activity type (Assignment, Exercise or Lab), activity language as well as an activity's start and end date.</value>
+  </data>
+  <data name="CreateMethodSignatures" xml:space="preserve">
+    <value>Creating Method Signatures</value>
+  </data>
+  <data name="CreateMethodSignaturesMessage" xml:space="preserve">
+    <value>When creating a method signature, you are able to specify the return type, the name of the method, the description of the method and you are able to add parameters to the method signature.</value>
+  </data>
+  <data name="CreateTestCase" xml:space="preserve">
+    <value>Creating Test Cases</value>
+  </data>
+  <data name="CreateTestCaseMessage" xml:space="preserve">
+    <value>When creating a test case, you are able to specify the name of the test case, the expected result of the test case as well as specify the values for all of the parameters.</value>
+  </data>
+  <data name="ExpandActivities" xml:space="preserve">
+    <value>Expanding Activities</value>
+  </data>
+  <data name="ExpandActivitiesMessage" xml:space="preserve">
+    <value>You are able to expand activities in order to view the Method Signatures and Test Cases that are part of the activity by clicking the arrow on the left side of the table.</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LoggingIn" xml:space="preserve">
+    <value>Logging In</value>
+  </data>
+  <data name="LoginMessage" xml:space="preserve">
+    <value>The first page that you see is the login page. On this page you will enter you Heritage Credentials in order to access the system.</value>
+  </data>
+  <data name="Methods" xml:space="preserve">
+    <value>Method Signatures</value>
+  </data>
+  <data name="MethodsMessage" xml:space="preserve">
+    <value>In the methods tab, you can get a list of method signatures for the selected activity. Click on the method to get detailed information like the name of the method, the return type, and parameter names and types.</value>
+  </data>
+  <data name="SelectTests" xml:space="preserve">
+    <value>Select Tests</value>
+  </data>
+  <data name="SelectTestsMessage" xml:space="preserve">
+    <value>In the Select Tests tab, you can see all the test cases for all methods. You can select which test cases to run. You can select or deselect all tests by clicking on the Select All or Deselect All buttons. Also, you can click on each test case to select or deselect individually. After you select your test cases, you can click on Run Tests to run your tests.</value>
+  </data>
+  <data name="StudentActivities" xml:space="preserve">
+    <value>List of Available Activities</value>
+  </data>
+  <data name="StudentActivitiesMessage" xml:space="preserve">
+    <value>Once you select a course, you get a list of available activities that you can select to test your code. To select an activity, click on the title of the activity.</value>
+  </data>
+  <data name="StudentCourseList" xml:space="preserve">
+    <value>List of Currently Enrolled Courses</value>
+  </data>
+  <data name="StudentCourseListMessage" xml:space="preserve">
+    <value>After you login, you can see all currently enrolled Computer Science courses for the semester. You can select a course to see if there are available activities for a course. </value>
+  </data>
+  <data name="TestResults" xml:space="preserve">
+    <value>Test Results</value>
+  </data>
+  <data name="TestResultsMessage" xml:space="preserve">
+    <value>In the Results tab, you can view all the test results after running your tests. You will see a overview of test results for each method like number of tests passed, and failed. Also, you get the total that ran. In addition, you can get detailed information if you click on the method.</value>
+  </data>
+</root>

@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CodeTestingPlatform.DatabaseEntities.Local.UserCourse>
+
+@{
+    ViewData["Title"] = "Student Home";
+}
+
+<h1>Student Page</h1>
+<h4>Courses</h4>
+<div style="display: flex !important;">
+    <div id="courses" class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3" style="height: fit-content;">
+        @foreach (var course in Model) {
+            <div class="col mb-3 d-flex">
+                <div class="card" style="width: 17rem; max-height: 12rem; ">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a asp-controller="Course" asp-action="StudentDetails" asp-route-id="@course.Course.CourseId">@course.Course.CourseName</a>
+                        </h5>
+                        <p class="card-subtitle">
+                            @course.Course.CourseCode
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="border-end bg-white" id="right-sidebar">
+        <div class="sidebar-heading border-bottom bg-light">
+            <h3 class="mt-0">Activities</h3>
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"><i class="far fa-calendar"></i>&nbsp;Ending Soon</h4>
+                    <div class="card-text list-group list-group-flush">
+                        @if (ViewBag.expiringActivities.Count > 0) {
+                            foreach (Activity a in ViewBag.expiringActivities) {
+                                <div class="list-group-item list-group-item-action list-group-item-light p-3">
+                                    <span>@a.Course.CourseName</span><br />
+                                    <a asp-action="CodeSubmission" asp-controller="CodeUpload" asp-route-activityId="@a.ActivityId">@a.Title</a> <br />
+                                    <span><em>@a.StartDate.ToString("yyyy\\-MM\\-dd")</em> - <em>@a.EndDate?.ToString("yyyy\\-MM\\-dd")</em></span><br />
+                                </div>
+                            }
+                        } else {
+                            <span class="list-group-item list-group-item-action list-group-item-light p-3">You have no activities expiring soon</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"><i class="far fa-calendar"></i>&nbsp;New Activities</h4>
+                    <div class="card-text list-group list-group-flush">
+                        @if (ViewBag.newActivities.Count > 0) {
+                            foreach (Activity a in ViewBag.newActivities) {
+                                <div class="list-group-item list-group-item-action list-group-item-light p-3">
+                                    <span>@a.Course.CourseName</span><br />
+                                    <a asp-action="CodeSubmission" asp-controller="CodeUpload" asp-route-activityId="@a.ActivityId">@a.Title</a> <br />
+                                    <span><em>@a.StartDate.ToString("yyyy\\-MM\\-dd")</em> - <em>@a.EndDate?.ToString("yyyy\\-MM\\-dd")</em></span><br />
+                                </div>
+                            }
+                        } else {
+                            <span class="list-group-item list-group-item-action list-group-item-light p-3">You have no new activities</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

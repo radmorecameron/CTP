@@ -1,0 +1,87 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.TestCase
+
+@{
+    ViewData["Title"] = "Test Case Details";
+
+    var message = TempData["message"];
+    if (message != null) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<h1>Test Case Details</h1>
+<h4>@Model.TestCaseName</h4>
+<hr />
+<div class="container bg-lgrey mb-2">
+    <a class="edit-icon float-right" asp-action="Edit" asp-route-id="@Model.TestCaseId">&#9998;</a>
+    <div class="row">
+        <label class="col-2 py-1 bold  text-end">Course:</label>
+        <div class="col py-1 text-start">
+            <a asp-action="Details" asp-controller="Course" asp-route-id="@Model.MethodSignature.Activity.CourseId">
+                @Html.DisplayFor(model => model.MethodSignature.Activity.Course.CourseName)
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-2 py-1 bold  text-end">Activity:</label>
+        <div class="col py-1 text-start">
+            <a asp-action="Details" asp-controller="Activity" asp-route-id="@Model.MethodSignature.ActivityId">
+                @Html.DisplayFor(model => model.MethodSignature.Activity.Title) (@Html.DisplayFor(model => model.MethodSignature.Activity.Language.LanguageFullName))
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-2 py-1 bold  text-end">Method:</label>
+        <div class="col py-1 text-start">
+            <a asp-action="Details" asp-controller="MethodSignature" asp-route-id="@Model.MethodSignatureId">
+                @Html.DisplayFor(model => model.MethodSignature.MethodName)
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-2 py-1 bold text-end">Expected Result: </label>
+        <div class="col py-1 text-start">@(Model.ExpectedValue ?? Model.TestCaseException.Exception.ExceptionName)</div>
+    </div>
+</div>
+<div>
+    @if (Model.Parameters.Count == 0) {
+        <h3>No Parameters</h3>
+    } else {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-right">#</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Data Type</th>
+                    <th class="text-center">Value</th>
+                    <th class="text-center">Input</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Parameters) {
+                <tr>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.SignatureParameter.ParameterPosition)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.SignatureParameter.ParameterName)
+                    </td>
+                    <td class="text-center">
+                        <span>@((item.SignatureParameter.DataTypeId != (int)Data.Types.Other)? item.SignatureParameter.DataType.DataType1 : item.SignatureParameter.ObjectDataType)</span>
+                    </td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Value)</td>
+                    <td>
+                        <div class="form-check form-switch d-flex justify-content-center">
+                            <input class="form-check-checkbox" type="checkbox" @(item.SignatureParameter.InputParameter ? "checked" : "") disabled />
+                            <label class="form-check-label" for="inputCheckLabel"></label>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,0 +1,107 @@
+﻿.hidden {
+    display: none;
+}
+
+.filters {
+    display:block;
+}
+
+.btn-clear-icon {
+    font-size: 1.2em;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+
+    .grid-2 i {
+        justify-self: end;
+        font-size: 2em;
+    }
+
+.grid-2 .fa-plus:hover {
+    cursor: pointer;
+}
+
+#legend-accordion {
+    margin-bottom: 2em;
+}
+
+.legend div {
+    display: grid;
+    grid-template-columns: 9em auto;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    padding-top: 7px;
+}
+
+.legend p {
+    font-size: 1em;
+}
+
+.legend i {
+    font-size: 1.5em;
+}
+
+.legend .header {
+    font-weight: bold;
+}
+
+#collapse-legend .card-body{
+    padding-left: 1em;
+}
+
+.modal-dialog {
+    max-width: 100%;
+    width: 100%;
+}
+
+.evaluation {
+    border-bottom: solid 1px lightgray;
+}
+
+.skill-evaluation .card-header{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+.skill-symbol{
+    display:grid;
+    grid-template-columns: 1fr 10fr;
+    width:100%;
+    text-align:left;
+}
+
+.skill-symbol .btn {
+    text-align: left;   
+}
+.skill-evaluation .card-header h2 .btn {
+    width: 100%;
+}
+
+.view-historical-data, .view-historical-data_new {
+    justify-self: end;
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 780px) {
+    .modal-dialog {
+        width: 80%;
+    }
+
+    .historical-data-modal {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .historical-student-evaluations {
+        border-right: solid 1px #000;
+        padding-right: 1em;
+    }
+
+    .historical-teacher-evaluations {
+        padding-left: 1em;
+    }
+
+}
+

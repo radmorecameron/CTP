@@ -1,0 +1,251 @@
+﻿@using CodeTestingPlatform.Models.Validation;
+@model List<TestCase>
+
+@{var testCaseHeaderDisplayed = false;
+    int testCaseCount = 0;
+    var rowClassName = "";
+    bool hiddenRow = ViewData[$"not_hidden"] != null ? false : true;
+    string greyColour = "";
+    // check if user came from course view
+    if (ViewData["courseId"] != null) {
+        greyColour = "bg-grey2";
+        rowClassName = $"{ViewData["activityCount"]}_{ViewData[$"methodCount{ViewData["activityCount"]}"]}_testcase_row";
+    } else if (ViewData["methodCount"] != null) {
+        greyColour = "bg-grey";
+        rowClassName = $"{ViewData["methodCount"]}_testcase_row";
+    }
+    var signatureId = ViewData[$"methodCount{ViewData["activityCount"]}_signatureId"];
+}
+
+@if (hiddenRow) {
+    @if (Model.Count > 0) {
+        @foreach (TestCase testCase in Model) {
+            bool invalidTestCase = ViewBag.InvalidTestCases.ContainsKey(testCase.TestCaseId);
+            string errorMessage = "";
+            if (invalidTestCase) {
+                foreach (string msg in ViewBag.InvalidTestCases[testCase.TestCaseId]) {
+                    errorMessage = errorMessage + msg;
+                }
+            }
+            testCaseCount++;
+            @if (!testCaseHeaderDisplayed) {
+                testCaseHeaderDisplayed = true;
+                <tr class="@rowClassName hidden_row bg-yellow">
+                    <th></th>
+                    <th colspan="2">Test Case Name</th>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th colspan="6">Expected Result</th>
+                    <th>
+                        @if (_cs.IsUserATeacher()) {
+                            <a title="Add Test Case" aria-label="Add Test Case" class="add_symbol btn btn-default" asp-action="Create" asp-controller="TestCase" asp-route-id="@testCase.MethodSignatureId" asp-route-from="@ViewContext.RouteData.Values["controller"]"><i class="fas fa-plus"></i></a>// Implement "From" attribute to help with routing once Test Case Workflow is similar to methodsignature.
+                        }
+                    </th>
+                </tr>
+            }
+            <tr class="@rowClassName hidden_row list_border_bottom @greyColour">
+                <td></td>
+                <td colspan="2">
+                    @if (_cs.IsUserATeacher()) {
+                        <a title="View Test Case" aria-label="View Test Case" asp-action="Details" asp-controller="TestCase" asp-route-id="@testCase.TestCaseId">@testCase.TestCaseName</a>
+                        @(invalidTestCase ? Html.Raw($"<span rel=\"tooltip\" title=\"{errorMessage}\" aria-label=\"{errorMessage}\"><i class=\"text-danger fas fa-exclamation-triangle\"></i></span>") : "")
+                    } else {
+                        @testCase.TestCaseName
+                    }
+                </td>
+                <td class="test_method_table">
+                    <span class="test_method_table">
+                        <ul class="ul-no-style">
+                            @foreach (var param in testCase.MethodSignature.SignatureParameters) {
+                                <li>@param.ParameterName</li>
+                            }
+                        </ul>
+                    </span>
+                </td>
+                <td class="test_method_table">
+                    <span class="test_method_table">
+                        <ul class="ul-no-style">
+                            @foreach (var param in testCase.Parameters) {
+                                @if (param.Value == null) {
+                                    <li>&nbsp;</li>
+                                } else {
+                                    if (param.SignatureParameter.DataType.DataType1 == "list") {
+                                        if (param.Value.Count(x => x == ',') > 3) {
+                                            string[] newValue = param.Value.Split(",");
+                                            <li>
+                                                @for (var i = 0; i < 4; i++) {
+                                                    @newValue[i]@Html.Raw(",")
+                                                    if (i == 3) {
+                                                        <span title="@param.Value">... </span>@Html.Raw("]")
+                                                    }
+                                                }
+                                            </li>
+                                        } else {
+                                            <li>@param.Value</li>
+                                        }
+                                    } else {
+                                        <li>@param.Value</li>
+                                    }
+                                }
+                            }
+                        </ul>
+                    </span>
+                </td>
+                <td colspan="6">
+                    @if (testCase.TestCaseException != null) {
+                        @testCase.TestCaseException.Exception.ExceptionName
+                    } else {
+                        @if (testCase.MethodSignature.ReturnType.DataType1 == "list") {
+                            if (testCase.ExpectedValue.Count(x => x == ',') > 3) {
+                                string[] newValue = testCase.ExpectedValue.Split(",");
+                                @for (var i = 0; i < 4; i++) {
+                                    @newValue[i]@Html.Raw(",")
+                                    if (i == 3) {
+                                        <span title="@testCase.ExpectedValue">... </span>@Html.Raw("]")
+                                    }
+                                }
+                            } else {
+                                @testCase.ExpectedValue
+                            }
+                        } else {
+                            @testCase.ExpectedValue
+                        }
+                    }
+                </td>
+                <td></td>
+            </tr>
+        }
+    } else {
+        if (_cs.IsUserATeacher()) {
+            <tr class="@rowClassName hidden_row bg-yellow">
+                <th></th>
+                <th colspan="2">Test Case Name</th>
+                <th>Name</th>
+                <th>Value</th>
+                <th colspan="6">Expected Result</th>
+                <th>
+                    @if (_cs.IsUserATeacher()) {
+                        <a title="Add Test Case" aria-label="Add Test Case" class="add_symbol btn btn-default" asp-action="Create" asp-controller="TestCase" asp-route-id="@ViewData["signatureId"]" asp-route-from="@ViewContext.RouteData.Values["controller"]"><i class="fas fa-plus"></i></a>// Implement "From" attribute to help with routing once Test Case Workflow is similar to methodsignature.
+                    }
+                </th>
+            </tr>
+            <tr class="@rowClassName hidden_row bg-grey2">
+                <td colspan="12" class="text-center">No Test Cases currently created for this Method Signature</td>
+            </tr>
+        }
+    }
+} else {
+
+    @if (Model.Count > 0) {
+        <table id="activities_table" class="detail">
+            <thead class="bg-yellow">
+                <tr>
+                    <th></th>
+                    <th class="title_col">Test Case Name</th>
+                    <th class="activity_type_col"></th>
+                    <th class="start_date_col">Name</th>
+                    <th class="end_date_col">Value</th>
+                    <th class="language_col">Expected Result</th>
+                    <th class="actions_col"></th>
+                    <th></th>
+                    <th>
+                        @if (_cs.IsUserATeacher()) {
+                            <a title="Add Test Case" aria-label="Add Test Case" class="add_symbol btn btn-default" asp-action="Create" asp-controller="TestCase" asp-route-id="@ViewData["signatureId"]" asp-route-from="@ViewContext.RouteData.Values["controller"]"><i class="fas fa-plus"></i></a>
+                        }
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (TestCase testCase in Model) {
+                    bool invalidTestCase = ViewBag.InvalidTestCases.ContainsKey(testCase.TestCaseId);
+                    string errorMessage = "";
+                    if (invalidTestCase) {
+                        foreach (string msg in ViewBag.InvalidTestCases[testCase.TestCaseId]) {
+                            errorMessage += msg;
+                        }
+                    }
+                    <tr class="@rowClassName table-table-row @invalidTestCase">
+                        <td></td>
+                        <td colspan="2">
+                            @if (_cs.IsUserATeacher()) {
+                                <a title="View Test Case" aria-label="View Test Case" asp-action="Details" asp-controller="TestCase" asp-route-id="@testCase.TestCaseId">@testCase.TestCaseName</a>
+                                @(invalidTestCase ? Html.Raw($"<span rel=\"tooltip\" title=\"{errorMessage}\" aria-label=\"{errorMessage}\"><i class=\"text-danger fas fa-exclamation-triangle\"></i></span>") : "")
+                            } else {
+                                @testCase.TestCaseName
+                            }
+                        </td>
+                        <td class="test_method_table">
+                            <span class="test_method_table">
+                                <ul class="ul-no-style">
+                                    @foreach (var param in testCase.MethodSignature.SignatureParameters) {
+                                        <li>@param.ParameterName</li>
+                                    }
+                                </ul>
+                            </span>
+                        </td>
+                        <td class="test_method_table">
+                            <span class="test_method_table">
+                                <ul class="ul-no-style">
+                                    @foreach (var param in testCase.Parameters) {
+                                        @if (param.Value == null) {
+                                            <li>&nbsp;</li>
+                                        } else {
+                                            if (param.SignatureParameter.DataType.DataType1 == "list") {
+                                                if (param.Value.Count(x => x == ',') > 3) {
+                                                    string[] newValue = param.Value.Split(",");
+                                                    <li>
+                                                        @for (var i = 0; i < 4; i++) {
+                                                            @newValue[i]@Html.Raw(",")
+                                                            if (i == 3) {
+                                                                <span title="@param.Value">... </span>@Html.Raw("]")
+                                                            }
+                                                        }
+                                                    </li>
+                                                } else {
+                                                    <li>@param.Value</li>
+                                                }
+                                            } else {
+                                                <li>@param.Value</li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </span>
+                        </td>
+                        <td colspan="5">
+                            @if (testCase.TestCaseException != null) {
+                                @testCase.TestCaseException.Exception.ExceptionName
+                            } else {
+                                @if (testCase.MethodSignature.ReturnType.DataType1 == "list") {
+                                    if (testCase.ExpectedValue.Count(x => x == ',') > 3) {
+                                        string[] newValue = testCase.ExpectedValue.Split(",");
+                                        @for (var i = 0; i < 4; i++) {
+                                            @newValue[i]@Html.Raw(",")
+                                            if (i == 3) {
+                                                <span title="@testCase.ExpectedValue">... </span>@Html.Raw("]")
+                                            }
+                                        }
+                                    } else {
+                                        @testCase.ExpectedValue
+                                    }
+                                } else {
+                                    @testCase.ExpectedValue
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    } else {
+        <div class="row">
+            <h5>This method signature does not have any test cases.</h5>
+            @if (_cs.IsUserATeacher()) {
+                <div class="col-lg-6 py-2">
+                    <a asp-action="Create" asp-controller="TestCase" asp-route-id="@ViewData["signatureId"]"><input class="btn btn-primary" type="button" value="Create a Test Case" /></a>
+                </div>
+            }
+        </div>
+    }
+}

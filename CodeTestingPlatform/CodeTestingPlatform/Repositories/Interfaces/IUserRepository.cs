@@ -1,0 +1,13 @@
+﻿using CodeTestingPlatform.DatabaseEntities.Local;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace CodeTestingPlatform.Repositories.Interfaces {
+    public interface IUserRepository {
+        Task<Ctpuser> FindByIdAsync(int id);
+        Task CreateAsync(Ctpuser user);
+        Task<bool> ExistsAsync(int id);
+    }
+}

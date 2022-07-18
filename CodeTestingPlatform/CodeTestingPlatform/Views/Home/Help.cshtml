@@ -1,0 +1,182 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Help"];
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    List<SelectListItem> cultureItems = new List<SelectListItem>() {
+            new SelectListItem {Value="en", Text="English" },
+            new SelectListItem {Value="fr", Text="French" }
+    };
+    string returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    string lang = @requestCulture.RequestCulture.UICulture.Name;
+}
+<form class="form-group" id="selectLanguage" asp-controller="Home"
+      asp-action="SelectLanguage" asp-route-returnUrl="@returnUrl" method="post">
+    <label class="control-label" asp-for="@requestCulture.RequestCulture.UICulture.Name">@Localizer["Language"]:</label>
+    <select name="culture" onchange="this.form.submit();" class="selectpicker" data-width="fit" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems">
+    </select>
+</form>
+
+@*
+    /*
+      Sections:
+        Login
+        Expand activities
+        Create activity
+        Create Method Signature
+        Create Test Case
+        View Activity/Method SIgnature/TestCase Analytics
+    */
+*@
+
+
+<div class="helpDiv">
+    <div class="border-end bg-white" id="sidebar">
+        <div class="sidebar-heading border-bottom bg-light">
+            <h1>@Localizer["Help"]</h1>
+        </div>
+        <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#loginHelp">@Localizer["LoggingIn"]</a>
+            @if (_cs.IsUserATeacher()) {
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#expandActivities">@Localizer["ExpandActivities"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#createActivities">@Localizer["CreateActivities"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#creatingMethodSignatures">@Localizer["CreateMethodSignatures"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#creatingTestCases">@Localizer["CreateTestCase"]</a>
+            }
+            @if (_cs.IsUserAStudent()) {
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#expandActivities">@Localizer["StudentCourseList"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#createActivities">@Localizer["StudentActivities"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#creatingMethodSignatures">@Localizer["CodeSubmission"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#creatingMethodSignatures">@Localizer["CodeUpload"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#creatingTestCases">@Localizer["Methods"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#expandActivities">@Localizer["SelectTests"]</a>
+                <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#createActivities">@Localizer["TestResults"]</a>
+            }
+        </div>
+    </div>
+    <div id="helpContent">
+        <div>
+            <hr />
+
+            <h2 id="loginHelp">@Localizer["LoggingIn"]</h2>
+            <p>
+                @Localizer["LoginMessage"]
+            </p>
+            <img class="helpImg" src="~/images/help/Login.png" alt="" />
+        </div>
+        @if (_cs.IsUserATeacher()) {
+            <div>
+                <hr />
+
+                <h2 id="expandActivities">@Localizer["ExpandActivities"]</h2>
+
+                <p>
+                    @Localizer["ExpandActivitiesMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/expand activities.gif" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="createActivities">@Localizer["CreateActivities"]</h2>
+                <p>
+                    @Localizer["CreateActivitiesMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/create activity.gif" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="creatingMethodSignatures">@Localizer["CreateMethodSignatures"]</h2>
+                <p>
+                    @Localizer["CreateMethodSignaturesMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/create method signature.gif" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="creatingTestCases">@Localizer["CreateTestCase"]</h2>
+                <p>
+                    @Localizer["CreateTestCaseMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/create test case.gif" />
+            </div>
+        }
+
+        @if (_cs.IsUserAStudent()) {
+            <div>
+                <hr />
+
+                <h2 id="expandActivities">@Localizer["StudentCourseList"]</h2>
+
+                <p>
+                    @Localizer["StudentCourseListMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/ListOfCurrentCourses.png" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="createActivities">@Localizer["StudentActivities"]</h2>
+                <p>
+                    @Localizer["StudentActivitiesMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/ListOfActivitiesForCourse.png" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="creatingMethodSignatures">@Localizer["CodeSubmission"]</h2>
+                <p>
+                    @Localizer["CodeSubmissionMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/CodeSubmission.png" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="creatingMethodSignatures">@Localizer["CodeUpload"]</h2>
+                <p>
+                    @Localizer["CodeUploadMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/CodeUpload.png" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="creatingTestCases">@Localizer["Methods"]</h2>
+                <p>
+                    @Localizer["MethodsMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/ShowMethods.png" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="expandActivities">@Localizer["SelectTests"]</h2>
+
+                <p>
+                    @Localizer["SelectTestsMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/SelectTests.png" />
+            </div>
+            <div>
+                <hr />
+
+                <h2 id="createActivities">@Localizer["TestResults"]</h2>
+                <p>
+                    @Localizer["TestResultsMessage"]
+                </p>
+                <img alt="" class="helpImg" src="~/images/help/TestResults.png" />
+            </div>
+        }
+    </div>
+</div>
+

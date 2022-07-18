@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.MethodSignature">
+    <Position X="8" Y="15" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>CAgAAAAAAQAgAkAAAAAAAAAAAAAAEAAAAAACAEAEAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\MethodSignature.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ReturnType" />
+      <Property Name="Activity" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Parameter">
+    <Position X="13" Y="18.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAwAAAAAIAAAAAAAAAAAAEAAAAAAgAAAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\Parameter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TestCase" />
+      <Property Name="SignatureParameter" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.Controllers.ActivityController">
+    <Position X="0.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIKAAQBBABAAgAAEAAAAAAEAAEACAAEAAAAIAAA=</HashCode>
+      <FileName>Controllers\ActivityController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_activityService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.Services.ActivityService">
+    <Position X="5.25" Y="3" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAIAIAAAAAAAIAgAAAAEAIAAAIA=</HashCode>
+      <FileName>Services\ActivityService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_activityRepository" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.856" />
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Activity">
+    <Position X="8.25" Y="7" Width="3.5" />
+    <AssociationLine Name="Course" Type="CodeTestingPlatform.DatabaseEntities.Local.Course" FixedFromPoint="true">
+      <Path>
+        <Point X="8.25" Y="8" />
+        <Point X="7" Y="8" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAAEBAAACAAAAEAAAIAAEAQgAgAAAAAEAAACAEgAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\Activity.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ActivityType" />
+      <Property Name="Course" />
+      <Property Name="Language" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.ActivityType">
+    <Position X="13.5" Y="7" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAIAQAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\ActivityType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Course">
+    <Position X="4.25" Y="7" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AACEAAAAAAAAAAAAAQAAAAAAAAAABAAAAAAAAIAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\Course.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.DataType">
+    <Position X="10.5" Y="12" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAIAAgAACAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\DataType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Language">
+    <Position X="13.25" Y="9.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAIAAAAAAAAQAAAAAgAgAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\Language.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Result">
+    <Position X="5.25" Y="15" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AQgIACAAAQAAAEAAAAAAAAAAAAAAEAAAAAAAAQAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\Result.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CodeUpload" />
+      <Property Name="TestCase" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.SignatureParameter">
+    <Position X="13.25" Y="15" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAEQICIAAAAAEAABAIBAAAIAAAAAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\SignatureParameter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DataType" />
+      <Property Name="MethodSignature" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Student">
+    <Position X="1.75" Y="15" Width="3" />
+    <AssociationLine Name="User" Type="CodeTestingPlatform.DatabaseEntities.Local.Ctpuser" FixedFromPoint="true">
+      <Path>
+        <Point X="2.25" Y="15" />
+        <Point X="2.25" Y="13.882" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABBAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\Student.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.TestCase">
+    <Position X="8.25" Y="18.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAQAAAAIAAAAAECAAAQAAAAIAAAAAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\TestCase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MethodSignature" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.UserCourse">
+    <Position X="1" Y="7" Width="2.25" />
+    <Members>
+      <Property Name="User" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAFAAAAAAAAAAAAAIAAAAgAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\UserCourse.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Course" />
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Teacher">
+    <Position X="1.25" Y="9.25" Width="2" />
+    <AssociationLine Name="User" Type="CodeTestingPlatform.DatabaseEntities.Local.Ctpuser" FixedToPoint="true">
+      <Path>
+        <Point X="2.188" Y="10.997" />
+        <Point X="2.188" Y="11.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAACAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\Teacher.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.CodeUpload">
+    <Position X="4" Y="9.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAEAAQAAAYAgASJCAAAAAAEAAAUACAAA=</HashCode>
+      <FileName>DatabaseEntities\Local\CodeUpload.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Activity" />
+      <Property Name="Student" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.DatabaseEntities.Local.Ctpuser">
+    <Position X="0.5" Y="11.75" Width="2.75" />
+    <AssociationLine Name="Teacher" Type="CodeTestingPlatform.DatabaseEntities.Local.Teacher" FixedFromPoint="true">
+      <Path>
+        <Point X="2.812" Y="11.75" />
+        <Point X="2.812" Y="10.997" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAEAAEAAQAAAAAAAAAAAAAgAAAAABAAAAAAAAAAAAAg=</HashCode>
+      <FileName>DatabaseEntities\Local\Ctpuser.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Student" />
+      <Property Name="Teacher" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CodeTestingPlatform.Repositories.GenericRepository&lt;TEntity&gt;">
+    <Position X="14.25" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAcACIAAACAABEAAAAJAKAIAKIICEAAgAgAAAAAEAIA=</HashCode>
+      <FileName>Repositories\GenericRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="CodeTestingPlatform.Repositories.Interfaces.IGenericRepository&lt;TEntity&gt;">
+    <Position X="9.5" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAcAAIAAAAAAAEAAAAIACAIAAIACAAAgAAAAAAAEAIA=</HashCode>
+      <FileName>Repositories\Interfaces\IGenericRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CodeTestingPlatform.Repositories.Interfaces.IActivityRepository">
+    <Position X="10.5" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Repositories\Interfaces\IActivityRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CodeTestingPlatform.Services.Interfaces.IActivityService">
+    <Position X="5.25" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAIAAAAAAAIAgAAAAAAIAAAIA=</HashCode>
+      <FileName>Services\Interfaces\IActivityService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

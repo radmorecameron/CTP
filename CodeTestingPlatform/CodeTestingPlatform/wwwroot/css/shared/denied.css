@@ -1,0 +1,9 @@
+﻿h1 {
+    font-weight: bold;
+    font-size: 5em;
+}
+
+h1, h2 {
+    text-align: center;
+    color: red;
+}

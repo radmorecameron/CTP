@@ -1,0 +1,114 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.MethodSignature
+
+@{
+    ViewData["Title"] = "Method Signature Details";
+    ViewData["signatureId"] = Model.SignatureId;
+    ViewData["not_hidden"] = true;
+
+    var message = TempData["message"];
+    if (message != null) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<h1>Method Signature Details</h1>
+
+<h4>@Model.MethodName</h4>
+<hr />
+<div class="container bg-lgrey mb-2 row">
+    <div class="col-6">
+        <div class="row">
+            <label class="col-3 py-1 bold text-end">Course:</label>
+            <div class="col py-1 text-start">
+                <a asp-action="Details" asp-controller="Course" asp-route-id="@Model.Activity.CourseId">
+                    @Html.DisplayFor(model => model.Activity.Course.CourseName)
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-3 py-1 bold text-end">Activity:</label>
+            <div class="col py-1 text-start">
+                <a asp-action="Details" asp-controller="Activity" asp-route-id="@Model.ActivityId">
+                    @Html.DisplayFor(model => model.Activity.Title) (@Html.DisplayFor(model => model.Activity.Language.LanguageFullName))
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-3 py-1 bold text-end" asp-for="ReturnType"></label>
+            <div class="col py-1 text-start">@((Model.ReturnTypeId == (int)Data.Types.Other)? Model.ReturnObjectType : Model.ReturnType.DataType1)</div>
+        </div>
+        <div class="row">
+            <label class="col-3 py-1 bold text-end" asp-for="Description"></label>
+            <div class="col py-1 text-start">@Model.Description</div>
+        </div>
+    </div>
+    <div class="col-6">
+        <a class="edit-icon float-right" asp-action="Edit" asp-route-id="@Model.SignatureId">&#9998;</a>
+        <label class="py-1 bold text-end">Exceptions:</label>
+        <div class="col py-1 text-start">
+            @if (Model.SignatureExceptions.Count > 0) {
+                <ul class="exception-list">
+                    @foreach (string exception in ViewBag.Exceptions) {
+                        <li>@exception</li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@if (Model.SignatureParameters.Count == 0) {
+    <h3>No Parameters</h3>
+} else {
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Data Type</th>
+                <th class="text-center">Default Value</th>
+                <th class="text-center">Input</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.SignatureParameters) {
+            <tr>
+                <td class="text-right">
+                    <div>@item.ParameterPosition</div>
+                </td>
+                <td class="text-center">
+                    <div>@item.ParameterName</div>
+                </td>
+                <td class="text-center">
+                    <div>@((item.DataTypeId == (int)Data.Types.Other)? item.ObjectDataType : item.DataType.DataType1)</div>
+                </td>
+                <td class="text-center">
+                    <div>@item.DefaultValue</div>
+                </td>
+                <td>
+                    @*<div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-checkbox" type="checkbox" @(item.InputParameter ? "checked" : "") disabled />
+                        <label class="form-check-label" for="inputCheckLabel"></label>
+                    </div>*@
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+<div>
+    <div class="container">
+        @await Html.PartialAsync("_TestCase", Model.TestCases.ToList())
+    </div>
+</div>

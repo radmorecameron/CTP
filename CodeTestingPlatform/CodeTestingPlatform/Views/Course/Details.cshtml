@@ -1,0 +1,34 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.Course
+
+@{
+    ViewData["Title"] = "Details";
+    TempData["courseId"] = Model.CourseId;
+    ViewData["courseId"] = Model.CourseId;
+    ViewData["from"] = ViewContext.RouteData.Values["action"];
+    var message = TempData["message"];
+    if (message != null) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<h1>Course Details</h1>
+<div class="row mb-2">
+    <div class="col-8"><h4>@Html.DisplayFor(model => model.CourseName)</h4></div>
+    @await Html.PartialAsync("_SelectDefaultLanguage", new ViewDataDictionary(ViewData)) 
+</div>
+
+
+<hr />
+
+@await Html.PartialAsync("_Activity", Model.Activities.ToList())
+
+<div>
+    @if (_cs.IsUserATeacher()) {
+        <a asp-action="Index" asp-controller="Teacher">Back to Home</a>
+    } else {
+        <a asp-action="Index" asp-controller="Student">Back to Home</a>
+    }
+</div>

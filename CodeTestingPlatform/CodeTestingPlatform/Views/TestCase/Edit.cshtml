@@ -1,0 +1,181 @@
+﻿@model CodeTestingPlatform.DatabaseEntities.Local.TestCase
+
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["action"];
+    TempData["OriginalTestCaseName"] = ViewData["OriginalTestCaseName"];
+
+    var errorMessage = TempData["errorMessage"];
+    if (errorMessage != null) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h5>Errors:</h5>
+            &nbsp;&nbsp;&nbsp;&nbsp; -@Html.Raw(@errorMessage)
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    List<string> parameterErrors = new();
+    @if (ViewBag.ParameterErrors != null) {
+        parameterErrors = (List<string>)ViewBag.ParameterErrors;
+    }
+}
+
+<h1>@ViewContext.RouteData.Values["action"] Test Case</h1>
+<hr />
+<div class="d-flex justify-content-center">
+    <div class="row">
+        <div class="col-md">
+            <div class="card flex-fill mb-3">
+                <div class="card-header">
+                    <div hidden class="card-actions float-right">
+                        <div class="dropdown show">
+                            <a href="#" data-toggle="dropdown" data-display="static">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="#">About</a>
+                                <a class="dropdown-item" href="#">Help</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 class="card-title mb-0">@ViewBag.MethodSignature.Activity.Title (@ViewBag.MethodSignature.Activity.Language.LanguageFullName) - (@ViewBag.MethodSignature.MethodName) </h5>
+                </div>
+                <div id="datatables-dashboard-projects_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6"></div><div class="col-sm-12 col-md-6"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @using (Html.BeginForm()) {
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="TestCaseId" />
+                <input type="hidden" asp-for="MethodSignatureId" value="@ViewBag.MethodSignature.SignatureId" />
+
+                <div class="row mb-3">
+                    <div class="form-floating">
+                        <input class="form-control" asp-for="TestCaseName" />
+                        <label asp-for="TestCaseName">Test Case Name</label>
+                        @*<span asp-validation-for="TestCaseName" class="text-danger"></span>*@
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ValidateTestCase"></label>
+                    <input asp-for="ValidateTestCase" class="form-check-input" type="checkbox" />
+                </div>
+                <h4 hidden class="mt-1">Parameters</h4>
+                @if (ViewBag.MethodSignature.SignatureParameters.Count == 0) {
+
+
+                    <h4>This Method Signature No Parameters</h4>
+                } else {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Data Type</th>
+                                <th class="text-center">Input</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        @*@if (parameterErrors.Count > 0) {
+                                <div class="text-danger validation-summary-errors">
+                                    <ul>
+                                        @foreach (string err in parameterErrors) {
+                                            <li>@err</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }*@
+                        <tbody>
+                            @for (int i = 0; i < Model.Parameters.Count; i++) {
+                                Parameter item = Model.Parameters.ElementAt(i);
+
+                                <tr>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.SignatureParameter.ParameterName)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <span>@((item.SignatureParameter.DataTypeId != (int)Data.Types.Other)? item.SignatureParameter.DataType.DataType1 : item.SignatureParameter.ObjectDataType)</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            <input class="form-check-checkbox" type="checkbox" @(item.SignatureParameter.InputParameter ? "checked" : "") disabled />
+                                            <label class="form-check-label" for="inputCheckLabel"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (item.SignatureParameter.DataType.DataType1 != "bool") {
+                                            <input class="form-control" value="@item.Value" name="Parameters[@item.SignatureParameter.ParameterPosition].Value" />
+                                        } else {
+                                            <select class="form-control" asp-for="@item.Value" value="@item.Value" name="Parameters[@item.SignatureParameter.ParameterPosition].Value" asp-items="@((item.SignatureParameter.DataType.LanguageId == 71) ? (new SelectList(new List<string>() { "True", "False" })) : (new SelectList(new List<string>() { "true", "false" })))"> </select>
+                                        }
+                                        @*<input class="form-control" value="@item.Value" name="Parameters[@item.ParameterPosition].Value" />*@
+                                        <input type="hidden" value="@item.SignatureParameterId" name="Parameters[@item.SignatureParameter.ParameterPosition].SignatureParameterId" />
+                                        <input type="hidden" value="@item.ParameterId" name="Parameters[@item.SignatureParameter.ParameterPosition].ParameterId" />
+                                        <input type="hidden" value="@Model.TestCaseId" name="Parameters[@item.SignatureParameter.ParameterPosition].TestCaseId" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <div class="row">
+                    <div class="col-md">
+                        <div class="form-floating mb-3">
+                            <input value="@((ViewBag.MethodSignature.ReturnTypeId != (int)Data.Types.Other)? ViewBag.MethodSignature.ReturnType.DataType1 : ViewBag.MethodSignature.ReturnObjectType)" class="form-control" readonly />
+                            <label>Return Type</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            @if (ViewBag.MethodSignature.ReturnType.DataType1 != "bool") {
+                                <input asp-for="ExpectedValue" class="form-control" />
+                                <label asp-for="ExpectedValue"></label>
+                            } else {
+                                <select class="form-control" asp-for="ExpectedValue" value="@Model.ExpectedValue" asp-items="@((ViewBag.MethodSignature.ReturnType.LanguageId == 71) ? (new SelectList(new List<string>() { "True", "False" })) : (new SelectList(new List<string>() { "true", "false" })))"> </select>
+                                <label asp-for="ExpectedValue" class="control-label"></label>
+                            }
+                            @*<span asp-validation-for="ExpectedValue" class="text-danger"></span>*@
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <select value="@ViewBag.SelectedException" class="form-control" for="testCaseException" name="testCaseException">
+                                <option value="-1">No Exception</option>
+                                @foreach (SignatureException e in ViewBag.TestCaseExceptions) {
+                                    if (ViewBag.SelectedException == e.ExceptionId) {
+                                        <option value="@e.ExceptionId" selected >@e.Exception.ExceptionName</option>
+                                    } else {
+                                        <option value="@e.ExceptionId">@e.Exception.ExceptionName</option>
+                                    }
+                                }
+                            </select>
+                            <label for="testCaseException" class="control-label">Returned Exception</label>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Delete" asp-controller="TestCase" asp-route-id="@Model.TestCaseId" class="btn btn-danger a-tag-delete">Delete</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Details" asp-controller="TestCase" asp-route-id="@Model.TestCaseId">Back to Test Case</a>
+</div>

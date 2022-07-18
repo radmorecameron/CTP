@@ -1,0 +1,50 @@
+﻿@model TestCase
+
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["action"];
+}
+
+<h1>Delete</h1>
+<h4>Are you sure you want to remove this test case?</h4>
+
+@using (Html.BeginForm("Delete", "TestCase", FormMethod.Post)) {
+
+    @if (Model.Results.Count() != 0) {
+        <div class="alert alert-warning mt-3" role="alert">
+            <h4 class="alert-heading">Warning!</h4>
+            <p class="mb-0">This test case has @Model.Results.Count() result(s).</p>
+            <hr>
+            <p>If you delete this test case, its related results will also be deleted.</p>
+        </div>
+    }
+
+    <div>
+        <h4>Test Case</h4>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TestCaseName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TestCaseName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.MethodSignature.MethodName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.MethodSignature.MethodName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.MethodSignature.Activity.Title)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.MethodSignature.Activity.Title)
+            </dd>
+        </dl>
+
+    </div>
+
+    <input type="submit" value="Delete" class="btn btn-danger" />
+    <a class="btn btn-secondary btn-link-color" asp-action="Edit" asp-controller="TestCase" asp-route-id="@Model.TestCaseId">Cancel</a>
+}

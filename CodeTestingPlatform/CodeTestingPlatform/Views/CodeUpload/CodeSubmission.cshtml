@@ -1,0 +1,385 @@
+﻿@model CodeTestingPlatform.Models.StudentCodeUpload
+
+@{
+    ViewData["Title"] = "Code Submission";
+    var result = ViewBag.Result != null && ViewBag.Result > 0 ? true : false;
+    var message = TempData["message"];
+    if (message != null) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+@section Styles {
+
+}
+
+<h1 class="mt-2">Code Test - @Model.Activity.Title (@Model.Activity.Language.LanguageName)</h1>
+
+@if (ViewBag.HasOutDatedSignatures == true) {
+<div class="alert alert-warning mt-3" role="alert">
+    <h4 class="alert-heading">Warning!</h4>
+    <p>Your teacher has modified this activity since your last Code Upload, please upload an up-to-date file.</p>
+</div>
+}
+
+<div class="row">
+    <div class="row">
+        <div class="col-md-6 mt-4">
+            <div class="container mt-3">
+                <div class="right-content row justify-content-center align-items-center mt-3">
+                    @{await Html.RenderPartialAsync("_SourceFile", Model.SourceFile);}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            @if (Model.FileName != null) {
+                <div class="container mt-3">
+                    <div class="right-content row justify-content-center align-items-center mt-3">
+                        <h3>Current Uploaded File</h3>
+                        <p>@Model.FileName (@Model.FileUploadedDate.ToString("yyyy\\/MM\\/dd hh:mm tt"))</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="btn nav-link heritage-color @(result ? "" : "active")" id="methods-tab" data-bs-toggle="tab" data-bs-target="#methods" type="button" role="tab" aria-controls="methods" aria-selected="true">Methods</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn nav-link heritage-color" id="select-tests-tab" data-bs-toggle="tab" data-bs-target="#select-tests" type="button" role="tab" aria-controls="select-tests" aria-selected="false">Select Tests</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn nav-link heritage-color @(result ? "active" : "")" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false">Results</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="leftTabContent">
+                <div class="tab-pane fade @(result ? "" : "show active")" id="methods" role="tabpanel" aria-labelledby="methods-tab">
+                    <div class="container mt-3">
+                        <div class="leftside-content">
+                            <h3>Methods</h3>
+                            @{int methodCount = 0;}
+                            <div class="row">
+                                @foreach (MethodSignature method in Model.Activity.MethodSignatures) {
+                                    methodCount += 1;
+                                    string id = $"method{methodCount}";
+                                    <button class="btn btn-light mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#@id" aria-expanded="false" aria-controls="@id">@method.MethodName</button>
+                                    <div class="col">
+                                        <div class="mb-2 collapse multi-collapse" id="@id">
+                                            <div class="card card-body">
+                                                <div class="row">
+                                                    <label class="font-weight-bold">Signature</label>
+                                                    <p>@method.MethodFormat()</p>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="font-weight-bold">Description</label>
+                                                    <p>@method.Description</p>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h5>Parameters</h5>
+                                                        <ul>
+                                                            @foreach (SignatureParameter param in method.SignatureParameters) {
+                                                                <li class="text-info">@param.ParameterName (@param.DataType.DataType1)</li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col">
+                                                        <h5>Return Type</h5>
+                                                        <p class="text-danger">@method.ReturnType.DataType1</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade @(result ? "show active" : "")" id="results" role="tabpanel" aria-labelledby="results-tab">
+                    <div class="container mt-3">
+                        <div class="leftside-content mb-2">
+                            <div class="row align-items-center">
+                                <h3 class="col-3">Results</h3>
+                                @if (Model.StudentResults.Count > 0) {
+                                    int pass = Model.Results.Where(x => x.PassFail.Value).ToList().Count;
+                                    int fail = Model.Results.Where(x => !x.PassFail.Value).ToList().Count;
+                                    int total = pass + fail;
+
+                                    <div class="col-9">
+                                        <div class="row justify-content-start">
+                                            <div class="col-sm-3 col-md-2 col-lg-2 col-xl-1 border">
+                                                <span style="font-size: 1.2rem; color: gray;">
+                                                    <i class="fas fa-flask"></i>
+                                                </span>
+                                                <label class="fs-5">@total</label>
+                                            </div>
+                                            <div class="col-sm-3 col-md-2 col-lg-2 col-xl-1 border">
+                                                <span style="font-size: 1.2rem; color: limegreen;">
+                                                    <i class="far fa-check-circle"></i>
+                                                </span>
+                                                <label class="fs-5">@pass</label>
+                                            </div>
+                                            <div class="col-sm-3 col-md-2 col-lg-2 col-xl-1 border">
+                                                <span style="font-size: 1.2rem; color: red;">
+                                                    <i class="far fa-times-circle"></i>
+                                                </span>
+                                                <label class="fs-5">@fail</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            @if (Model.StudentResults.Count > 0) {
+                                var methods = Model.StudentResults.GroupBy(x => x.MethodSignatureId).ToList();
+                                <div class="accordion accordion-flush" id="accordion-results">
+                                    @foreach (var method in methods) {
+                                        string accordId = $"method{method.ElementAt(0).MethodSignatureId}";
+                                        @foreach (var testresult in method) {
+                                            <div class="accordion-item mb-2">
+                                                <div class="accordion-header">
+                                                    <div class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#@(accordId)" aria-expanded="false" aria-controls="@(accordId)">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <p class="col-4">@testresult.MethodName</p>
+                                                                <div class="col-7 d-flex justify-content-end">
+                                                                    <div class="p-2">
+                                                                        <i class="fas fa-flask" style="color:gray"></i>
+                                                                        <label class="ms-1">@(testresult.Passed + testresult.Failed) Total</label>
+                                                                    </div>
+                                                                    <div class="p-2">
+                                                                        <i class="far fa-check-circle" style="color:limegreen"></i>
+                                                                        <label class="ms-1">@(testresult.Passed) Passed</label>
+                                                                    </div>
+                                                                    <div class="p-2">
+                                                                        <i class="far fa-times-circle" style="color:red"></i>
+                                                                        <label class="ms-1">@(testresult.Failed) Failed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="@(accordId)" class="accordion-collapse collapse" aria-labelledby="heading@(accordId)" data-bs-parent="#accordion">
+                                                    @if (Model.Results != null) {
+                                                        var results = Model.Results.Where(x => x.TestCase.MethodSignatureId == testresult.MethodSignatureId).ToList();
+                                                        <div class="accordion-body">
+                                                            <div class="row border-bottom mb-2 p-2">
+                                                                <div class="col-3">
+                                                                    <label class="fw-bold">Pass/Fail</label>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <label class="fw-bold">Expected Value</label>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <label class="fw-bold">Actual Value</label>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <label class="fw-bold">Error Message</label>
+                                                                </div>
+                                                            </div>
+                                                            @foreach (var studentResult in results) {
+
+                                                                <div class="row border-bottom mb-2 p-2">
+                                                                    <div class="col-3">
+                                                                        @if (studentResult.PassFail.Value) {
+                                                                            <i class="far fa-check-circle" style="color:limegreen"></i>
+                                                                            <label>Passed</label>
+                                                                        } else {
+                                                                            <i class="far fa-times-circle" style="color:red"></i>
+                                                                            <label>Failed</label>
+                                                                        }
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <label>@studentResult.TestCase.ExpectedValue</label>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <label>@studentResult.ActualValue</label>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <label>@studentResult.ErrorMessage</label>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    
+                                </div>
+                            } else {
+                                <label>No Results</label>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="select-tests" role="tabpanel" aria-labelledby="select-tests-tab">
+                    <div class="container mt-3">
+                        <h3>Select Tests to run</h3>
+                        @if (Model.Activity.MethodSignatures.Count() > 0) {
+                            <div class="row mb-2">
+                                <div class="d-flex justify-content-end">
+                                    <div class="mr-1">
+                                        <button class="btn btn-light" id="selectAll">Select All</button>
+                                    </div>
+                                    <button class="btn btn-light" id="deselectAll">Deselect All</button>
+                                </div>
+                            </div>
+                        }
+                        <div class="accordion accordion-flush" id="accordionMethods">
+                            @{methodCount = 0;}
+                            @foreach (MethodSignature method in Model.Activity.MethodSignatures) {
+                                methodCount += 1;
+                                <div class="accordion-item">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-2 center-display">
+                                            @if (method.TestCases.Count() > 0) {
+                                                <input class="checkbox-class" type="checkbox" checked id="signature@(methodCount)">
+                                            }
+                                        </div>
+                                        <h5 class="mb-0 accordion-header col-lg-11 col-md-10" id="heading@(methodCount)">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(methodCount)" aria-expanded="false" aria-controls="collapse@(methodCount)">
+                                                @method.MethodName
+                                            </button>
+                                        </h5>
+                                    </div>
+                                    <div id="collapse@(methodCount)" class="accordion-collapse collapse" aria-labelledby="heading@(methodCount)" data-bs-parent="#accordion">
+                                        <div class="accordion-body">
+                                            @{int testCaseCount = 0;}
+                                            @if (method.TestCases.Count() > 0) {
+                                                @foreach (TestCase test in method.TestCases) {
+                                                    if (ViewBag.InvalidTestCases.Count > 0) {
+                                                        if (!ViewBag.InvalidTestCases.ContainsKey(test.TestCaseId)) {
+                                                            testCaseCount += 1;
+                                                            <div class="row">
+                                                                <div class="col-1" aria-hidden="true"></div>
+                                                                <div class="form-check col-11">
+                                                                    <input class="form-check-input checkbox-class testCase-checkbox signature@(methodCount)" type="checkbox" checked id="signature@(methodCount)testCase@(testCaseCount)" />
+                                                                    <input type="hidden" id="signature@(methodCount)testCase@(testCaseCount)Id" value="@test.TestCaseId" />
+                                                                    <label class="form-check-label">@test.TestCaseName</label>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    } else {
+                                                        testCaseCount += 1;
+                                                        <div class="row">
+                                                            <div class="col-1" aria-hidden="true"></div>
+                                                            <div class="form-check col-11">
+                                                                <input class="form-check-input checkbox-class testCase-checkbox signature@(methodCount)" type="checkbox" checked id="signature@(methodCount)testCase@(testCaseCount)" />
+                                                                <input type="hidden" id="signature@(methodCount)testCase@(testCaseCount)Id" value="@test.TestCaseId" />
+                                                                <label class="form-check-label">@test.TestCaseName</label>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            } else {
+                                                <div class="row">
+                                                    <p>There are currently no Test Cases for this Method</p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="container mt-4">
+                        <form asp-action="CodeSubmission" onsubmit="return displayProgress();">
+                            <input name="activityId" type="hidden" value="@Model.Activity.ActivityId" />
+                            <input id="testCaseIds" name="testCaseIdsString" type="hidden" value="" />
+                            <div class="row justify-content-end">
+                                <input id="runTests" class="col-2 btn btn-primary" type="submit" value="Run Tests" data-bs-toggle="modal" data-bs-target="#loading"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="container">
+            <a class="btn btn-default text-secondary" asp-controller="Course" asp-action="StudentDetails" asp-route-id="@Model.Activity.CourseId">Back to Course</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="loading">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-yellow">
+                <h5 class="modal-title text-white">Running Tests</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center">
+                    <span class="spinner-border" role="status" aria-hidden="true"></span>
+                    <strong class="ms-2">Please wait while tests are running...</strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+    $(document).on('change', '.checkbox-class', function () {
+        if (this.checked && !this.id.includes("testCase")) { // if checkbox checked is a signature checkbox => all test cases are selected for it
+            $("." + this.id).map(function () {
+                $("#" + this.id).prop("checked", true);
+            }).get();
+        } else if (!this.checked && !this.id.includes("testCase")) { // if checkbox unchecked is a signature checkbox => all test cases are unselected for it
+            $("." + this.id).map(function () {
+                $("#" + this.id).prop("checked", false);
+            }).get();
+        }
+    });
+
+    // Add the selected test cases to the Post
+    $("#runTests").on('click', function () {
+        var testCaseIds = $('.testCase-checkbox:checkbox:checked').map(function () {
+            return $("#" + this.id + "Id").val();
+        }).get();
+        $("#testCaseIds").val(testCaseIds);
+    });
+
+    $('#selectAll').on('click', function () {
+        $('.checkbox-class:checkbox').map(function () {
+            $("#" + this.id).prop("checked", true);
+        });
+    });
+
+    $('#deselectAll').on('click', function () {
+        $('.checkbox-class:checkbox').map(function () {
+            $("#" + this.id).prop("checked", false);
+        });
+    });
+
+    function displayProgress() {
+        $("#runTests").prop("disabled", true);
+        $("#runTests").val("Running tests...");
+        $(".submit-progress").removeClass("invisible");
+        $("body").addClass("submit-progress-bg");
+        return true;
+    }
+</script>
+

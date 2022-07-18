@@ -1,0 +1,127 @@
+﻿@model List<MethodSignature>
+@if (Model.Count > 0) {
+    var methodHeaderDisplayed = false;
+    if (ViewData["courseId"] != null) {
+        ViewData[$"methodCount{ViewData["activityCount"]}"] = 0;
+        @foreach (MethodSignature method in Model) {
+            bool invalidSignature = ViewBag.InvalidSignatures.ContainsKey(method.SignatureId);
+            string errorMessage = "";
+            if (invalidSignature) {
+                errorMessage = $"This Signature has {ViewBag.InvalidSignatures[method.SignatureId]} Test Case{(ViewBag.InvalidSignatures[method.SignatureId] > 1 ? "s" : "")} with Error(s)";
+            }
+            ViewData[$"methodCount{ViewData["activityCount"]}"] = (int)ViewData[$"methodCount{ViewData["activityCount"]}"] + 1;
+            @if (!methodHeaderDisplayed) {
+                methodHeaderDisplayed = true;
+                <tr class="@($"{ViewData["activityCount"]}")_method_row hidden_row bg-yellow">
+                    <th></th>
+                    <th colspan="3">Method Signature</th>
+                    <th class="return_type_col">Return Type</th>
+                    <th colspan="6" class="description_col">Description</th>
+                    <th>
+                        @if (_cs.IsUserATeacher()) {
+                            <a title="Add Method Signature" aria-label="Add Method Signature" class="add_symbol btn btn-default" asp-action="Create" asp-controller="MethodSignature" asp-route-id="@method.ActivityId" asp-route-from="@ViewContext.RouteData.Values["controller"]"><i class="fas fa-plus"></i></a>
+                        }
+                    </th>
+                </tr>
+            }
+            <tr id="@($"{ViewData["activityCount"]}_{ViewData[$"methodCount{ViewData["activityCount"]}"]}")_method_row" class="@($"{ViewData["activityCount"]}")_method_row hidden_row list_border_bottom bg-grey">
+                <td title="View Test Cases" aria-label="View Test Cases" role="button" id="@($"{ViewData["activityCount"]}_{ViewData[$"methodCount{ViewData["activityCount"]}"]}")_method_btn" class="btn btn-default" onclick="show_hide_row('@($"{ViewData["activityCount"]}_{ViewData[$"methodCount{ViewData["activityCount"]}"]}")_testcase_row', '@($"{ViewData["activityCount"]}_{ViewData[$"methodCount{ViewData["activityCount"]}"]}")_method_row', '@($"{ViewData["activityCount"]}_{ViewData[$"methodCount{ViewData["activityCount"]}"]}")_method_btn', 0);"><i class="fas fa-arrow-circle-right"></i></td>
+                <td colspan="3">
+                    @if (_cs.IsUserATeacher()) {
+                        <a title="View Method Signature" aria-label="View Method Signature" asp-action="Details" asp-controller="MethodSignature" asp-route-id="@method.SignatureId">@method.MethodFormat()</a>
+                        @(invalidSignature ? Html.Raw($"<span rel=\"tooltip\" title=\"{errorMessage}\" aria-label=\"{errorMessage}\" class=\"badge rounded-pill bg-danger\">{ViewBag.InvalidSignatures[method.SignatureId]}</span>") : "")
+                    } else {
+                        @method.MethodFormat()
+                    }
+                </td>
+                <td>@((method.ReturnTypeId == (int)Data.Types.Other)? method.ReturnObjectType : method.ReturnType.DataType1)</td>
+                <td colspan="6">@method.Description</td>
+                <td></td>
+            </tr>
+
+            ViewData[$"methodCount{ViewData["activityCount"]}_signatureId"] = method.SignatureId;
+            ViewData["signatureId"] = method.SignatureId;
+            @await Html.PartialAsync("_TestCase", method.TestCases.ToList())
+
+        }
+    } else {
+        <table id="activities_table" class="detail">
+            <thead class="bg-yellow">
+                <tr>
+                    <th></th>
+                    <th class="method_name_col" colspan="3">Method Signature</th>
+                    <th class="return_type_col" >Return Type</th>
+                    <th class="description_col" colspan="4">Description</th>
+                    <th aria-hidden="true" class="actions_col"></th>
+                    <th></th>
+                    @if (_cs.IsUserATeacher()) {
+                        <th>
+                            <a title="Add Method Signature" aria-label="Add Method Signature" class="add_symbol btn btn-default" asp-action="Create" asp-controller="MethodSignature" asp-route-id="@ViewData[$"activityId"]" asp-route-from="@ViewContext.RouteData.Values["controller"]"><i class="fas fa-plus"></i></a>
+                        </th>
+                    } else {
+                        <th aria-hidden="true"></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+
+                @{ViewData["methodCount"] = 0;}
+                @foreach (MethodSignature method in Model) {
+                    bool invalidSignature = ViewBag.InvalidSignatures.ContainsKey(method.SignatureId);
+                    string errorMessage = "";
+                    if (invalidSignature) {
+                        errorMessage = $"This Signature has {ViewBag.InvalidSignatures[method.SignatureId]} Test Case{(ViewBag.InvalidSignatures[method.SignatureId] > 1 ? "s" : "")} with Error(s)";
+                    }
+                    ViewData["methodCount"] = (int)ViewData[$"methodCount"] + 1;
+                    <tr id="@(ViewData["methodCount"])_method_row">
+                        <td title="View Test Cases" aria-label="View Test Cases" role="button" id="@(ViewData["methodCount"])_method_btn" class="btn btn-default" onclick="show_hide_row('@($"{ViewData["methodCount"]}")_testcase_row', '@($"{ViewData["methodCount"]}")_method_row', '@(ViewData["methodCount"])_method_btn', 0);"><i class="fas fa-arrow-circle-right"></i></td>
+                        <td colspan="3">
+                            @if (_cs.IsUserATeacher()) {
+                                <a title="View Method Signature" aria-label="View Method Signature" asp-action="Details" asp-controller="MethodSignature" asp-route-id="@method.SignatureId">@method.MethodFormat()</a>
+                                @(invalidSignature ? Html.Raw($"<span rel=\"tooltip\" title=\"{errorMessage}\" aria-label=\"{errorMessage}\" class=\"badge rounded-pill bg-danger\">{ViewBag.InvalidSignatures[method.SignatureId]}</span>") : "")
+                            } else {
+                                @method.MethodFormat()
+                            }
+                        </td>
+                        <td>@((method.ReturnTypeId == (int)Data.Types.Other)? method.ReturnObjectType : method.ReturnType.DataType1)</td>
+                        <td colspan="5">@method.Description</td>
+                        <td></td>
+                    </tr>
+
+                    ViewData[$"methodCount{ViewData["activityCount"]}_signatureId"] = method.SignatureId;
+                    ViewData["signatureId"] = method.SignatureId;
+                    @await Html.PartialAsync("_TestCase", method.TestCases.ToList())
+
+                }
+
+            </tbody>
+        </table>
+    }
+} else {
+    if (ViewData["courseId"] != null) {
+        if (_cs.IsUserATeacher()) {
+            <tr class="@($"{ViewData["activityCount"]}")_method_row hidden_row bg-yellow">
+                <th></th>
+                <th colspan="3">Method Signature</th>
+                <th class="return_type_col">Return Type</th>
+                <th colspan="6" class="description_col">Description</th>
+                <th>
+                    <a title="Add Method Signature" aria-label="Add Method Signature" class="add_symbol btn btn-default" asp-action="Create" asp-controller="MethodSignature" asp-route-id="@ViewData[$"activityCount{ViewData["activityCount"]}_activityId"]" asp-route-from="@ViewContext.RouteData.Values["controller"]"><i class="fas fa-plus"></i></a>
+                </th>
+            </tr>
+            <tr class="@($"{ViewData["activityCount"]}")_method_row hidden_row bg-grey">
+                <td colspan="12" class="text-center">No Method Signatures currently created for this Activity</td>
+            </tr>
+        }
+    } else {
+        <div class="row">
+            <h5>This activity does not have any method signatures.</h5>
+            @if (_cs.IsUserATeacher()) {
+                <div class="col-lg-6 py-2">
+                    <a asp-action="Create" asp-controller="MethodSignature" asp-route-id="@ViewData["activityId"]" asp-route-from="@ViewContext.RouteData.Values["controller"]"><input class="btn btn-primary" type="button" value="Create a Method Signature" /></a>
+                </div>
+            }
+        </div>
+    }
+}
+

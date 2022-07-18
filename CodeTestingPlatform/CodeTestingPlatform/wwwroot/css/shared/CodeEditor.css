@@ -1,0 +1,29 @@
+﻿.data-set {
+    color: palevioletred;
+}
+
+.function-name {
+    color: dodgerblue;
+}
+
+.leftside-content {
+    border: 2px solid black;
+    height: 500px;
+    padding: 0 0.5em;
+}
+
+.right-content {
+    border: 2px solid black;
+    height: 500px;
+    padding: 0 0.5em;
+}
+
+.test-failed {
+    font-weight: bold;
+    color:red;
+}
+
+.test-passed {
+    font-weight: bold;
+    color: green;
+}
